@@ -78,6 +78,7 @@ public:
 private:
     static std::unordered_map<std::string, std::string> properties;
     static int runIndex;
+    static bool isInitialized;
 
     std::string namespaceName;
     std::string secondaryNamespace;

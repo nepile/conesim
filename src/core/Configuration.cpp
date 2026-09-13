@@ -29,6 +29,7 @@ bool ObjectFactory::hasType(const std::string& className) const {
 
 std::unordered_map<std::string, std::string> Configuration::properties;
 int Configuration::runIndex = 0;
+bool Configuration::isInitialized = false;
 
 Configuration::Configuration(): namespaceName(""), secondaryNamespace("") {}
 
@@ -152,6 +153,9 @@ std::string Configuration::parseRunSetting(const std::string& rawValue) {
 }
 
 std::string Configuration::getConfiguration(const std::string& name) const {
+    if (!isInitialized) {
+        init("");
+    }
 
     std::string fullName = getFullConfigurationName(name, false);
     auto it = properties.find(fullName);
@@ -481,6 +485,7 @@ void Configuration::loadFile(const std::string& filename) {
 
 void Configuration::init(const std::string& propFile) {
     properties.clear();
+    isInitialized = true;
 
     loadFile("settings/default_settings.cfg");
 
