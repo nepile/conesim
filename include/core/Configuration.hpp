@@ -17,6 +17,10 @@ private:
     std::stack<std::string> oldNamespaces;
     std::stack<std::string> oldSecondaryNamespaces;
 
+    std::string getFullConfigurationName(
+        const std::string& name
+    ) const;
+
 public:
     Configuration();
     explicit Configuration(const std::string& namespaceName);
@@ -26,6 +30,15 @@ public:
 
     void setSecondaryNamespace(const std::string& name);
     void restoreSecondaryNamespace();
+
+    std::string getConfiguration(
+        const std::string& name
+    ) const;
+
+    std::string getConfiguration(
+        const std::string& name,
+        const std::string& defaultValue
+    ) const;
 };
 
 }

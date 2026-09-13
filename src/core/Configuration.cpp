@@ -6,28 +6,18 @@
 
 namespace conesim {
 
-std::unordered_map<std::string, std::string>
-    Configuration::properties;
+std::unordered_map<std::string, std::string> Configuration::properties;
 
+Configuration::Configuration(): namespaceName(""), secondaryNamespace("") {}
 
-Configuration::Configuration()
-    :   namespaceName(""),
-        secondaryNamespace("")
-{}
+Configuration::Configuration(const std::string& namespaceName): namespaceName(namespaceName), secondaryNamespace("") {}
 
-Configuration::Configuration(const std::string& namespaceName)
-    :   namespaceName(namespaceName),
-        secondaryNamespace("")
-{}
-
-void Configuration::setNamespace(const std::string& name)
-{
+void Configuration::setNamespace(const std::string& name) {
     oldNamespaces.push(namespaceName);
     namespaceName = name;
 }
 
-void Configuration::restoreNamespace()
-{
+void Configuration::restoreNamespace() {
     if (oldNamespaces.empty())
     {
         throw std::runtime_error(
@@ -39,14 +29,12 @@ void Configuration::restoreNamespace()
     oldNamespaces.pop();
 }
 
-void Configuration::setSecondaryNamespace(const std::string& name)
-{
+void Configuration::setSecondaryNamespace(const std::string& name) {
     oldSecondaryNamespaces.push(secondaryNamespace);
     secondaryNamespace = name;
 }
 
-void Configuration::restoreSecondaryNamespace()
-{
+void Configuration::restoreSecondaryNamespace() {
     if (oldSecondaryNamespaces.empty())
     {
         throw std::runtime_error(
@@ -56,6 +44,41 @@ void Configuration::restoreSecondaryNamespace()
 
     secondaryNamespace = oldSecondaryNamespaces.top();
     oldSecondaryNamespaces.pop();
+}
+
+std::string Configuration::getFullConfigurationName(const std::string& name) const {
+    if(namespaceName.empty()) {
+        return name;
+    }
+
+    return namespaceName + "." + name;
+}
+
+std::string Configuration::getConfiguration(const std::string& name) const {
+    const std::string fullName = getFullConfigurationName(name);
+
+    auto it = properties.find(fullName);
+
+    if (it == properties.end()) {
+        throw std::runtime_error(
+            "Configuration not found: " + fullName
+        );
+    }
+
+    return it->second;
+}
+
+std::string Configuration::getConfiguration(const std::string& name, const std::string& defaultValue) const {
+    const std::string fullName = getFullConfigurationName(name);
+
+    auto it = properties.find(fullName);
+
+    if (it == properties.end())
+    {
+        return defaultValue;
+    }
+
+    return it->second;
 }
 
 
