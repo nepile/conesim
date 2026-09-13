@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <stack>
+#include <optional>
 
 namespace conesim {
 
@@ -28,7 +29,7 @@ private:
 
     double parseDoubleValue(
         const std::string& value,
-        const std::string& settingNames
+        const std::string& settingName
     ) const;
 
 public:
@@ -41,27 +42,28 @@ public:
     void setSecondaryNamespace(const std::string& name);
     void restoreSecondaryNamespace();
 
-    std::string getConfiguration(
-        const std::string& name
-    ) const;
+    bool contains(const std::string& name) const;
+    std::string getFullPropertyName(const std::string& name) const;
 
-    std::string getConfiguration(
-        const std::string& name,
-        const std::string& defaultValue
-    ) const;
+    std::string getConfiguration(const std::string& name) const;
+    std::string getConfiguration(const std::string& name, const std::string& defaultValue) const;
+    std::optional<std::string> getOptionalConfiguration(const std::string& name) const;
 
     int getInt(const std::string& name) const;
     int getInt(const std::string& name, int defaultValue) const;
+    std::optional<int> getOptionalInt(const std::string& name) const;
 
     double getDouble(const std::string& name) const;
     double getDouble(const std::string& name, double defaultValue) const;
+    std::optional<double> getOptionalDouble(const std::string& name) const;
 
     bool getBoolean(const std::string& name) const;
     bool getBoolean(const std::string& name, bool defaultValue) const;
-    
-    static void init(
-        const std::string& propFile
-    );
+    std::optional<bool> getOptionalBoolean(const std::string& name) const;
+
+    static void addSetting(const std::string& name, const std::string& value);
+    static void addSettings(const std::string& propFile);
+    static void init(const std::string& propFile);
 };
 
 }

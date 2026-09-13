@@ -49,6 +49,29 @@ std::string Configuration::getFullConfigurationName(const std::string& name, boo
     return ns + "." + name;
 }
 
+std::string Configuration::getFullPropertyName(const std::string& name) const {
+    std::string primary = getFullConfigurationName(name, false);
+    if (properties.find(primary) != properties.end()) {
+        return primary;
+    }
+    if (!secondaryNamespace.empty()) {
+        std::string secondary = getFullConfigurationName(name, true);
+        if (properties.find(secondary) != properties.end()) {
+            return secondary;
+        }
+    }
+    return "";
+}
+
+bool Configuration::contains(const std::string& name) const {
+    try {
+        std::string val = getConfiguration(name);
+        return !val.empty();
+    } catch (const std::exception&) {
+        return false;
+    }
+}
+
 std::string Configuration::getConfiguration(const std::string& name) const {
     std::string fullName = getFullConfigurationName(name, false);
     auto it = properties.find(fullName);
@@ -70,6 +93,14 @@ std::string Configuration::getConfiguration(const std::string& name, const std::
         return getConfiguration(name);
     } catch (const std::exception&) {
         return defaultValue;
+    }
+}
+
+std::optional<std::string> Configuration::getOptionalConfiguration(const std::string& name) const {
+    try {
+        return getConfiguration(name);
+    } catch (const std::exception&) {
+        return std::nullopt;
     }
 }
 
@@ -100,7 +131,7 @@ double Configuration::parseDoubleValue(const std::string& value, const std::stri
             throw std::invalid_argument("Trailing characters");
         }
         return parsed * multiplier;
-    } catch (const std::exception& e) {
+    } catch (const std::exception&) {
         throw std::runtime_error("Invalid numeric setting '" + value + "' for '" + settingName + "'");
     }
 }
@@ -114,6 +145,14 @@ double Configuration::getDouble(const std::string& name, double defaultValue) co
         return getDouble(name);
     } catch (const std::exception&) {
         return defaultValue;
+    }
+}
+
+std::optional<double> Configuration::getOptionalDouble(const std::string& name) const {
+    try {
+        return getDouble(name);
+    } catch (const std::exception&) {
+        return std::nullopt;
     }
 }
 
@@ -131,6 +170,14 @@ int Configuration::getInt(const std::string& name, int defaultValue) const {
         return getInt(name);
     } catch (const std::exception&) {
         return defaultValue;
+    }
+}
+
+std::optional<int> Configuration::getOptionalInt(const std::string& name) const {
+    try {
+        return getInt(name);
+    } catch (const std::exception&) {
+        return std::nullopt;
     }
 }
 
@@ -157,6 +204,22 @@ bool Configuration::getBoolean(const std::string& name, bool defaultValue) const
     } catch (const std::exception&) {
         return defaultValue;
     }
+}
+
+std::optional<bool> Configuration::getOptionalBoolean(const std::string& name) const {
+    try {
+        return getBoolean(name);
+    } catch (const std::exception&) {
+        return std::nullopt;
+    }
+}
+
+void Configuration::addSetting(const std::string& name, const std::string& value) {
+    properties[name] = value;
+}
+
+void Configuration::addSettings(const std::string& propFile) {
+    loadFile(propFile);
 }
 
 void Configuration::loadFile(const std::string& filename) {
