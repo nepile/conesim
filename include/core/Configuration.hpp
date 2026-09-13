@@ -2,12 +2,15 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <stack>
 #include <optional>
 #include <memory>
 #include <functional>
 #include <stdexcept>
+#include <iostream>
+#include <fstream>
 
 namespace conesim {
 
@@ -74,12 +77,17 @@ struct AutoRegister {
 class Configuration {
 public:
     static inline const std::string DEF_SETTINGS_FILE = "settings/default_settings.cfg";
+    static inline const std::string SETTING_OUTPUT_S = "Settings.output";
     static inline const std::string FILL_DELIMITER = "%%";
 
 private:
     static std::unordered_map<std::string, std::string> properties;
     static int runIndex;
     static bool isInitialized;
+
+    static std::ostream* outStream;
+    static std::unique_ptr<std::ofstream> fileStream;
+    static std::unordered_set<std::string> writtenSettings;
 
     std::string namespaceName;
     std::string secondaryNamespace;
@@ -102,6 +110,10 @@ private:
 
     static std::string parseRunSetting(
         const std::string& value
+    );
+
+    static void outputSetting(
+        const std::string& setting
     );
 
     double parseDoubleValue(

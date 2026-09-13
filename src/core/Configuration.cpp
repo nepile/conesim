@@ -32,16 +32,31 @@ std::unordered_map<std::string, std::string> Configuration::properties;
 int Configuration::runIndex = 0;
 bool Configuration::isInitialized = false;
 
+std::ostream* Configuration::outStream = nullptr;
+std::unique_ptr<std::ofstream> Configuration::fileStream = nullptr;
+std::unordered_set<std::string> Configuration::writtenSettings;
+
 Configuration::Configuration(): namespaceName(""), secondaryNamespace("") {}
 
 Configuration::Configuration(const std::string& namespaceName): namespaceName(namespaceName), secondaryNamespace("") {}
 
 void Configuration::setRunIndex(int index) {
     runIndex = index;
+    writtenSettings.clear();
 }
 
 int Configuration::getRunIndex() {
     return runIndex;
+}
+
+void Configuration::outputSetting(const std::string& setting) {
+    if (outStream != nullptr && writtenSettings.find(setting) == writtenSettings.end()) {
+        if (writtenSettings.empty()) {
+            *outStream << "# Settings for run " << (runIndex + 1) << "\n";
+        }
+        *outStream << setting << "\n";
+        writtenSettings.insert(setting);
+    }
 }
 
 void Configuration::setNamespace(const std::string& name) {
@@ -189,6 +204,7 @@ std::string Configuration::getConfiguration(const std::string& name) const {
         throw std::runtime_error("Can't find setting " + getPropertyNamesString(name));
     }
 
+    outputSetting(fullName + " = " + value);
     return value;
 }
 
@@ -497,6 +513,9 @@ void Configuration::loadFile(const std::string& filename) {
 
 void Configuration::init(const std::string& propFile) {
     properties.clear();
+    writtenSettings.clear();
+    outStream = nullptr;
+    fileStream.reset();
     isInitialized = true;
 
     if (std::filesystem::exists(DEF_SETTINGS_FILE)) {
@@ -505,6 +524,28 @@ void Configuration::init(const std::string& propFile) {
 
     if (!propFile.empty()) {
         loadFile(propFile);
+    }
+
+    auto it = properties.find(SETTING_OUTPUT_S);
+    if (it != properties.end()) {
+        std::string outFile = it->second;
+        auto start = std::find_if(outFile.begin(), outFile.end(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        });
+        auto end = std::find_if(outFile.rbegin(), outFile.rend(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        }).base();
+
+        if (start >= end) {
+            outStream = &std::cout;
+        } else {
+            std::string cleanPath(start, end);
+            fileStream = std::make_unique<std::ofstream>(cleanPath);
+            if (!fileStream->is_open()) {
+                throw std::runtime_error("Can't open Settings output file: " + cleanPath);
+            }
+            outStream = fileStream.get();
+        }
     }
 }
 
