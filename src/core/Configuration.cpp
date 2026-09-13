@@ -78,18 +78,29 @@ std::string Configuration::getFullConfigurationName(const std::string& name, boo
     return ns + "." + name;
 }
 
+std::string Configuration::getPropertyNamesString(const std::string& name) const {
+    if (!secondaryNamespace.empty()) {
+        return "'" + secondaryNamespace + "." + name + "' nor '" +
+               (namespaceName.empty() ? name : namespaceName + "." + name) + "'";
+    } else if (!namespaceName.empty()) {
+        return "'" + namespaceName + "." + name + "'";
+    } else {
+        return "'" + name + "'";
+    }
+}
+
 std::string Configuration::getFullPropertyName(const std::string& name) const {
+    if (!contains(name)) {
+        return "";
+    }
+
     std::string primary = getFullConfigurationName(name, false);
-    if (properties.find(primary) != properties.end()) {
+    auto it = properties.find(primary);
+    if (it != properties.end() && !parseRunSetting(it->second).empty()) {
         return primary;
     }
-    if (!secondaryNamespace.empty()) {
-        std::string secondary = getFullConfigurationName(name, true);
-        if (properties.find(secondary) != properties.end()) {
-            return secondary;
-        }
-    }
-    return "";
+
+    return getFullConfigurationName(name, true);
 }
 
 bool Configuration::contains(const std::string& name) const {
@@ -175,7 +186,7 @@ std::string Configuration::getConfiguration(const std::string& name) const {
     }
 
     if (value.empty()) {
-        throw std::runtime_error("Configuration not found: '" + name + "'");
+        throw std::runtime_error("Can't find setting " + getPropertyNamesString(name));
     }
 
     return value;
@@ -225,7 +236,7 @@ double Configuration::parseDoubleValue(const std::string& value, const std::stri
         }
         return parsed * multiplier;
     } catch (const std::exception& e) {
-        throw std::runtime_error("Invalid numeric setting '" + value + "' for '" + settingName + "'");
+        throw std::runtime_error("Invalid numeric setting '" + value + "' for '" + settingName + "'\n" + e.what());
     }
 }
 

@@ -92,6 +92,10 @@ private:
         bool useSecondary = false
     ) const;
 
+    std::string getPropertyNamesString(
+        const std::string& name
+    ) const;
+
     static void loadFile(
         const std::string& filename
     );
