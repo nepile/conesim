@@ -205,6 +205,14 @@ double Configuration::parseDoubleValue(const std::string& value, const std::stri
     }
 }
 
+int Configuration::convertToInt(double doubleValue, const std::string& settingName) const {
+    double inPart = 0.0;
+    if(std::modf(doubleValue, &inPart) != 0.0) {
+        throw std::runtime_error("Expected integer value for setting '" + settingName + "' got '" + std::to_string(doubleValue) + "'");
+    }
+    return static_cast<int>(doubleValue);
+}
+
 double Configuration::getDouble(const std::string& name) const {
     return parseDoubleValue(getConfiguration(name), name);
 }
@@ -280,6 +288,95 @@ std::optional<bool> Configuration::getOptionalBoolean(const std::string& name) c
         return getBoolean(name);
     } catch (const std::exception&) {
         return std::nullopt;
+    }
+}
+
+std::vector<std::string> Configuration::getCsvSetting(const std::string& name) const {
+    std::string csv = getConfiguration(name);
+    std::vector<std::string> values;
+    std::stringstream ss(csv);
+    std::string token;
+
+    while (std::getline(ss, token, ',')) {
+        auto start = std::find_if(token.begin(), token.end(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        });
+        auto end = std::find_if(token.rbegin(), token.rend(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        }).base();
+
+        if (start < end) {
+            values.emplace_back(start, end);
+        } else {
+            values.emplace_back("");
+        }
+    }
+
+    return values;
+}
+
+std::vector<std::string> Configuration::getCsvSetting(const std::string& name, std::size_t expectedCount) const {
+    std::vector<std::string> values = getCsvSetting(name);
+    if (values.size() != expectedCount) {
+        throw std::runtime_error("Read unexpected amount (" + std::to_string(values.size()) +
+                                 ") of comma separated values for setting '" + name +
+                                 "' (expected " + std::to_string(expectedCount) + ")");
+    }
+    return values;
+}
+
+std::vector<double> Configuration::getCsvDoubles(const std::string& name) const {
+    std::vector<std::string> tokens = getCsvSetting(name);
+    std::vector<double> results;
+    results.reserve(tokens.size());
+
+    for (const auto& token : tokens) {
+        results.push_back(parseDoubleValue(token, name));
+    }
+    return results;
+}
+
+std::vector<double> Configuration::getCsvDoubles(const std::string& name, std::size_t expectedCount) const {
+    std::vector<std::string> tokens = getCsvSetting(name, expectedCount);
+    std::vector<double> results;
+    results.reserve(tokens.size());
+
+    for (const auto& token : tokens) {
+        results.push_back(parseDoubleValue(token, name));
+    }
+    return results;
+}
+
+std::vector<int> Configuration::getCsvInts(const std::string& name) const {
+    std::vector<double> doubleVals = getCsvDoubles(name);
+    std::vector<int> results;
+    results.reserve(doubleVals.size());
+
+    for (double val : doubleVals) {
+        results.push_back(convertToInt(val, name));
+    }
+    return results;
+}
+
+std::vector<int> Configuration::getCsvInts(const std::string& name, std::size_t expectedCount) const {
+    std::vector<double> doubleVals = getCsvDoubles(name, expectedCount);
+    std::vector<int> results;
+    results.reserve(doubleVals.size());
+
+    for (double val : doubleVals) {
+        results.push_back(convertToInt(val, name));
+    }
+    return results;
+}
+
+void Configuration::assertValidRange(const std::vector<int>& range, const std::string& name) const {
+    if (range.size() != 2) {
+        throw std::runtime_error("Range setting " + getFullPropertyName(name) +
+                                 " should contain only two comma separated integer values");
+    }
+    if (range[0] > range[1]) {
+        throw std::runtime_error("Range setting's " + getFullPropertyName(name) +
+                                 " first value should be smaller or equal to second value");
     }
 }
 

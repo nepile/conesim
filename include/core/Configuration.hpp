@@ -37,6 +37,8 @@ private:
         const std::string& settingName
     ) const;
 
+    int convertToInt(double doubleValue, const std::string& settingName) const;
+
 public:
     Configuration();
     explicit Configuration(const std::string& namespaceName);
@@ -65,6 +67,17 @@ public:
     bool getBoolean(const std::string& name) const;
     bool getBoolean(const std::string& name, bool defaultValue) const;
     std::optional<bool> getOptionalBoolean(const std::string& name) const;
+
+    std::vector<std::string> getCsvSetting(const std::string& name) const;
+    std::vector<std::string> getCsvSetting(const std::string& name, std::size_t expectedCount) const;
+
+    std::vector<double> getCsvDoubles(const std::string& name) const;
+    std::vector<double> getCsvDoubles(const std::string& name, std::size_t expectedCount) const;
+
+    std::vector<int> getCsvInts(const std::string& name) const;
+    std::vector<int> getCsvInts(const std::string& name, std::size_t expectedCount) const;
+
+    void assertValidRange(const std::vector<int>& range, const std::string& name) const;
 
     static void setRunIndex(int index);
     static int getRunIndex();
