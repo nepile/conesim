@@ -9,6 +9,24 @@
 
 namespace conesim {
 
+ObjectFactory& ObjectFactory::instance() {
+    static ObjectFactory factory;
+    return factory;
+}
+
+void ObjectFactory::registerType(const std::string& className, DefaultCreator creator) {
+    defaultRegistry[className] = std::move(creator);
+}
+
+void ObjectFactory::registerType(const std::string& className, ConfiguredCreator creator) {
+    configuredRegistry[className] = std::move(creator);
+}
+
+bool ObjectFactory::hasType(const std::string& className) const {
+    return defaultRegistry.find(className) != defaultRegistry.end() ||
+           configuredRegistry.find(className) != configuredRegistry.end();
+}
+
 std::unordered_map<std::string, std::string> Configuration::properties;
 int Configuration::runIndex = 0;
 
@@ -134,6 +152,7 @@ std::string Configuration::parseRunSetting(const std::string& rawValue) {
 }
 
 std::string Configuration::getConfiguration(const std::string& name) const {
+
     std::string fullName = getFullConfigurationName(name, false);
     auto it = properties.find(fullName);
     std::string value;
@@ -206,8 +225,8 @@ double Configuration::parseDoubleValue(const std::string& value, const std::stri
 }
 
 int Configuration::convertToInt(double doubleValue, const std::string& settingName) const {
-    double inPart = 0.0;
-    if(std::modf(doubleValue, &inPart) != 0.0) {
+    double intPart = 0.0;
+    if (std::modf(doubleValue, &intPart) != 0.0) {
         throw std::runtime_error("Expected integer value for setting '" + settingName + "' got '" + std::to_string(doubleValue) + "'");
     }
     return static_cast<int>(doubleValue);
@@ -234,12 +253,7 @@ std::optional<double> Configuration::getOptionalDouble(const std::string& name) 
 }
 
 int Configuration::getInt(const std::string& name) const {
-    double dVal = getDouble(name);
-    double intPart = 0.0;
-    if (std::modf(dVal, &intPart) != 0.0) {
-        throw std::runtime_error("Expected integer value for setting '" + name + "' got '" + std::to_string(dVal) + "'");
-    }
-    return static_cast<int>(dVal);
+    return convertToInt(getDouble(name), name);
 }
 
 int Configuration::getInt(const std::string& name, int defaultValue) const {
@@ -381,7 +395,7 @@ void Configuration::assertValidRange(const std::vector<int>& range, const std::s
 }
 
 std::string Configuration::valueFillString(const std::string& input) const {
-    if(input.find(FILL_DELIMITER) == std::string::npos) {
+    if (input.find(FILL_DELIMITER) == std::string::npos) {
         return input;
     }
 
@@ -389,9 +403,9 @@ std::string Configuration::valueFillString(const std::string& input) const {
     std::string result;
     std::size_t pos = 0;
 
-    while(pos < input.size()) {
+    while (pos < input.size()) {
         std::size_t start = input.find(FILL_DELIMITER, pos);
-        if(start == std::string::npos) {
+        if (start == std::string::npos) {
             result += input.substr(pos);
             break;
         }
@@ -400,7 +414,7 @@ std::string Configuration::valueFillString(const std::string& input) const {
         std::size_t keyStart = start + FILL_DELIMITER.size();
         std::size_t end = input.find(FILL_DELIMITER, keyStart);
 
-        if(end == std::string::npos) {
+        if (end == std::string::npos) {
             result += input.substr(start);
             break;
         }

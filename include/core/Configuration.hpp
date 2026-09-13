@@ -5,8 +5,71 @@
 #include <vector>
 #include <stack>
 #include <optional>
+#include <memory>
+#include <functional>
+#include <stdexcept>
 
 namespace conesim {
+
+class Configuration;
+
+class ObjectFactory {
+public:
+    using DefaultCreator = std::function<std::shared_ptr<void>()>;
+    using ConfiguredCreator = std::function<std::shared_ptr<void>(const Configuration&)>;
+
+    static ObjectFactory& instance();
+
+    void registerType(const std::string& className, DefaultCreator creator);
+    void registerType(const std::string& className, ConfiguredCreator creator);
+
+    bool hasType(const std::string& className) const;
+
+    template <typename T>
+    std::shared_ptr<T> create(const std::string& className) const {
+        auto it = defaultRegistry.find(className);
+        if (it == defaultRegistry.end()) {
+            throw std::runtime_error("Class not registered for default construction: '" + className + "'");
+        }
+        return std::static_pointer_cast<T>(it->second());
+    }
+
+    template <typename T>
+    std::shared_ptr<T> create(const std::string& className, const Configuration& config) const {
+        auto it = configuredRegistry.find(className);
+        if (it == configuredRegistry.end()) {
+            throw std::runtime_error("Class not registered for configured construction: '" + className + "'");
+        }
+        return std::static_pointer_cast<T>(it->second(config));
+    }
+
+private:
+    std::unordered_map<std::string, DefaultCreator> defaultRegistry;
+    std::unordered_map<std::string, ConfiguredCreator> configuredRegistry;
+};
+
+template <typename T>
+struct AutoRegister {
+    explicit AutoRegister(const std::string& className) {
+        ObjectFactory::instance().registerType(className, []() -> std::shared_ptr<void> {
+            return std::make_shared<T>();
+        });
+    }
+
+    AutoRegister(const std::string& className, bool isConfigured) {
+        if (isConfigured) {
+            ObjectFactory::instance().registerType(className, [](const Configuration& cfg) -> std::shared_ptr<void> {
+                return std::make_shared<T>(cfg);
+            });
+        }
+    }
+};
+
+#define REGISTER_TYPE(ClassName) \
+    static conesim::AutoRegister<ClassName> _reg_##ClassName(#ClassName);
+
+#define REGISTER_CONFIGURABLE_TYPE(ClassName) \
+    static conesim::AutoRegister<ClassName> _reg_conf_##ClassName(#ClassName, true);
 
 class Configuration {
 public:
@@ -40,7 +103,10 @@ private:
         const std::string& settingName
     ) const;
 
-    int convertToInt(double doubleValue, const std::string& settingName) const;
+    int convertToInt(
+        double doubleValue,
+        const std::string& settingName
+    ) const;
 
 public:
     Configuration();
@@ -83,6 +149,16 @@ public:
     void assertValidRange(const std::vector<int>& range, const std::string& name) const;
 
     std::string valueFillString(const std::string& input) const;
+
+    template <typename T>
+    std::shared_ptr<T> createObject(const std::string& className) const {
+        return ObjectFactory::instance().create<T>(className);
+    }
+
+    template <typename T>
+    std::shared_ptr<T> createConfiguredObject(const std::string& className) const {
+        return ObjectFactory::instance().create<T>(className, *this);
+    }
 
     static void setRunIndex(int index);
     static int getRunIndex();
