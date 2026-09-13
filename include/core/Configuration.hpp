@@ -18,12 +18,18 @@ private:
     std::stack<std::string> oldSecondaryNamespaces;
 
     std::string getFullConfigurationName(
-        const std::string& name
+        const std::string& name,
+        bool useSecondary = false
     ) const;
 
     static void loadFile(
         const std::string& filename
     );
+
+    double parseDoubleValue(
+        const std::string& value,
+        const std::string& settingNames
+    ) const;
 
 public:
     Configuration();
@@ -44,6 +50,15 @@ public:
         const std::string& defaultValue
     ) const;
 
+    int getInt(const std::string& name) const;
+    int getInt(const std::string& name, int defaultValue) const;
+
+    double getDouble(const std::string& name) const;
+    double getDouble(const std::string& name, double defaultValue) const;
+
+    bool getBoolean(const std::string& name) const;
+    bool getBoolean(const std::string& name, bool defaultValue) const;
+    
     static void init(
         const std::string& propFile
     );
