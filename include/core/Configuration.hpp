@@ -21,6 +21,10 @@ private:
         const std::string& name
     ) const;
 
+    static void loadFile(
+        const std::string& filename
+    );
+
 public:
     Configuration();
     explicit Configuration(const std::string& namespaceName);
@@ -39,6 +43,10 @@ public:
         const std::string& name,
         const std::string& defaultValue
     ) const;
+
+    static void init(
+        const std::string& propFile
+    );
 };
 
 }
