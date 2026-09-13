@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cmath>
+#include <filesystem>
 
 namespace conesim {
 
@@ -223,7 +224,7 @@ double Configuration::parseDoubleValue(const std::string& value, const std::stri
             throw std::invalid_argument("Trailing characters");
         }
         return parsed * multiplier;
-    } catch (const std::exception&) {
+    } catch (const std::exception& e) {
         throw std::runtime_error("Invalid numeric setting '" + value + "' for '" + settingName + "'");
     }
 }
@@ -487,7 +488,9 @@ void Configuration::init(const std::string& propFile) {
     properties.clear();
     isInitialized = true;
 
-    loadFile("settings/default_settings.cfg");
+    if (std::filesystem::exists(DEF_SETTINGS_FILE)) {
+        loadFile(DEF_SETTINGS_FILE);
+    }
 
     if (!propFile.empty()) {
         loadFile(propFile);

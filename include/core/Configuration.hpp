@@ -73,6 +73,7 @@ struct AutoRegister {
 
 class Configuration {
 public:
+    static inline const std::string DEF_SETTINGS_FILE = "settings/default_settings.cfg";
     static inline const std::string FILL_DELIMITER = "%%";
 
 private:
