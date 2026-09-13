@@ -9,6 +9,9 @@
 namespace conesim {
 
 class Configuration {
+public:
+    static inline const std::string FILL_DELIMITER = "%%";
+
 private:
     static std::unordered_map<std::string, std::string> properties;
     static int runIndex;
@@ -78,6 +81,8 @@ public:
     std::vector<int> getCsvInts(const std::string& name, std::size_t expectedCount) const;
 
     void assertValidRange(const std::vector<int>& range, const std::string& name) const;
+
+    std::string valueFillString(const std::string& input) const;
 
     static void setRunIndex(int index);
     static int getRunIndex();

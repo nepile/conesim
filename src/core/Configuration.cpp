@@ -380,6 +380,39 @@ void Configuration::assertValidRange(const std::vector<int>& range, const std::s
     }
 }
 
+std::string Configuration::valueFillString(const std::string& input) const {
+    if(input.find(FILL_DELIMITER) == std::string::npos) {
+        return input;
+    }
+
+    Configuration globalConfig;
+    std::string result;
+    std::size_t pos = 0;
+
+    while(pos < input.size()) {
+        std::size_t start = input.find(FILL_DELIMITER, pos);
+        if(start == std::string::npos) {
+            result += input.substr(pos);
+            break;
+        }
+
+        result += input.substr(pos, start - pos);
+        std::size_t keyStart = start + FILL_DELIMITER.size();
+        std::size_t end = input.find(FILL_DELIMITER, keyStart);
+
+        if(end == std::string::npos) {
+            result += input.substr(start);
+            break;
+        }
+
+        std::string settingKey = input.substr(keyStart, end - keyStart);
+        result += globalConfig.getConfiguration(settingKey);
+        pos = end + FILL_DELIMITER.size();
+    }
+
+    return result;
+}
+
 void Configuration::addSetting(const std::string& name, const std::string& value) {
     properties[name] = value;
 }
