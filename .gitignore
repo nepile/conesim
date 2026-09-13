@@ -1,0 +1,25 @@
+# Build
+build/
+cmake-build-*/
+out/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Compiled objects
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.exe
+
+# Testing / coverage
+coverage/
+*.gcda
+*.gcno
+*.gcov
