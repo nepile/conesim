@@ -11,6 +11,7 @@ namespace conesim {
 class Configuration {
 private:
     static std::unordered_map<std::string, std::string> properties;
+    static int runIndex;
 
     std::string namespaceName;
     std::string secondaryNamespace;
@@ -25,6 +26,10 @@ private:
 
     static void loadFile(
         const std::string& filename
+    );
+
+    static std::string parseRunSetting(
+        const std::string& value
     );
 
     double parseDoubleValue(
@@ -60,6 +65,9 @@ public:
     bool getBoolean(const std::string& name) const;
     bool getBoolean(const std::string& name, bool defaultValue) const;
     std::optional<bool> getOptionalBoolean(const std::string& name) const;
+
+    static void setRunIndex(int index);
+    static int getRunIndex();
 
     static void addSetting(const std::string& name, const std::string& value);
     static void addSettings(const std::string& propFile);

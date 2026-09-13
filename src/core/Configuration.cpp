@@ -10,10 +10,19 @@
 namespace conesim {
 
 std::unordered_map<std::string, std::string> Configuration::properties;
+int Configuration::runIndex = 0;
 
 Configuration::Configuration(): namespaceName(""), secondaryNamespace("") {}
 
 Configuration::Configuration(const std::string& namespaceName): namespaceName(namespaceName), secondaryNamespace("") {}
+
+void Configuration::setRunIndex(int index) {
+    runIndex = index;
+}
+
+int Configuration::getRunIndex() {
+    return runIndex;
+}
 
 void Configuration::setNamespace(const std::string& name) {
     oldNamespaces.push(namespaceName);
@@ -72,20 +81,80 @@ bool Configuration::contains(const std::string& name) const {
     }
 }
 
+std::string Configuration::parseRunSetting(const std::string& rawValue) {
+    std::string val = rawValue;
+
+    std::size_t commentPos = val.find('#');
+    if (commentPos != std::string::npos) {
+        val = val.substr(0, commentPos);
+    }
+
+    auto trimStart = std::find_if(val.begin(), val.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    });
+    auto trimEnd = std::find_if(val.rbegin(), val.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base();
+
+    if (trimStart >= trimEnd) {
+        return "";
+    }
+    val = std::string(trimStart, trimEnd);
+
+    if (runIndex < 0 || val.size() < 3 || val.front() != '[' || val.back() != ']') {
+        return val;
+    }
+
+    std::string content = val.substr(1, val.size() - 2);
+    std::vector<std::string> elements;
+    std::stringstream ss(content);
+    std::string item;
+
+    while (std::getline(ss, item, ';')) {
+        auto itemStart = std::find_if(item.begin(), item.end(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        });
+        auto itemEnd = std::find_if(item.rbegin(), item.rend(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        }).base();
+
+        if (itemStart < itemEnd) {
+            elements.emplace_back(itemStart, itemEnd);
+        } else {
+            elements.emplace_back("");
+        }
+    }
+
+    if (elements.empty()) {
+        return "";
+    }
+
+    int targetIdx = runIndex % static_cast<int>(elements.size());
+    return elements[targetIdx];
+}
+
 std::string Configuration::getConfiguration(const std::string& name) const {
     std::string fullName = getFullConfigurationName(name, false);
     auto it = properties.find(fullName);
+    std::string value;
 
-    if (it == properties.end() && !secondaryNamespace.empty()) {
-        fullName = getFullConfigurationName(name, true);
-        it = properties.find(fullName);
+    if (it != properties.end()) {
+        value = parseRunSetting(it->second);
     }
 
-    if (it == properties.end()) {
+    if (value.empty() && !secondaryNamespace.empty()) {
+        fullName = getFullConfigurationName(name, true);
+        it = properties.find(fullName);
+        if (it != properties.end()) {
+            value = parseRunSetting(it->second);
+        }
+    }
+
+    if (value.empty()) {
         throw std::runtime_error("Configuration not found: '" + name + "'");
     }
 
-    return it->second;
+    return value;
 }
 
 std::string Configuration::getConfiguration(const std::string& name, const std::string& defaultValue) const {
