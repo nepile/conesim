@@ -46,3 +46,32 @@ target_link_libraries(run_tests
 
 include(GoogleTest)
 gtest_discover_tests(run_tests)
+
+find_package(Doxygen)
+
+if(DOXYGEN_FOUND)
+    set(DOXYGEN_PROJECT_BRIEF "Opportunistic Network Simulation Engine")
+    set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs")
+    
+    set(DOXYGEN_JAVADOC_AUTOBRIEF YES)
+    set(DOXYGEN_EXTRACT_ALL YES)
+    set(DOXYGEN_EXTRACT_PRIVATE YES)
+    set(DOXYGEN_EXTRACT_STATIC YES)
+    
+    set(DOXYGEN_HAVE_DOT YES)
+    set(DOXYGEN_CLASS_GRAPH YES)
+    set(DOXYGEN_CALL_GRAPH YES)
+    set(DOXYGEN_CALLER_GRAPH YES)
+    
+    set(DOXYGEN_GENERATE_HTML YES)
+    set(DOXYGEN_GENERATE_LATEX NO)
+
+    doxygen_add_docs(
+        docs
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        COMMENT "Generating API documentation with Doxygen"
+    )
+else()
+    message(WARNING "Doxygen not found, documentation target 'docs' will not be available.")
+endif()
