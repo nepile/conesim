@@ -167,6 +167,7 @@ public:
     void assertValidRange(const std::vector<int>& range, const std::string& name) const;
 
     std::string valueFillString(const std::string& input) const;
+    std::string toString() const;
 
     template <typename T>
     std::shared_ptr<T> createObject(const std::string& className) const {
