@@ -30,7 +30,7 @@ public:
      *
      * @param msg The message that was created.
      */
-    virtual void newMessage(Message msg) = 0;
+    virtual void newMessage(Message& msg) = 0;
 
     /**
      * @brief Callback invoked when a message starts transmitting across a link.
@@ -39,7 +39,7 @@ public:
      * @param from The sending host.
      * @param to The receiving host.
      */
-    virtual void messageTransferStarted(Message msg, Host from, Host to) = 0;
+    virtual void messageTransferStarted(Message& msg, Host& from, Host& to) = 0;
 
     /**
      * @brief Callback invoked when a message is deleted or dropped from a host's buffer.
@@ -49,7 +49,7 @@ public:
      * @param dropped True if the message was dropped due to buffer overflow or TTL expiration;
      *                false if deleted intentionally (e.g., after final delivery).
      */
-    virtual void messageDeleted(Message msg, Host where, bool dropped) = 0;
+    virtual void messageDeleted(Message& msg, Host& where, bool dropped) = 0;
 
     /**
      * @brief Callback invoked when an in-flight message transmission is interrupted before completion.
@@ -58,7 +58,7 @@ public:
      * @param from The host that was transmitting.
      * @param to The intended recipient host.
      */
-    virtual void messageTransferAborted(Message msg, Host from, Host to) = 0;
+    virtual void messageTransferAborted(Message& msg, Host& from, Host& to) = 0;
 
     /**
      * @brief Callback invoked when a message transfer successfully completes.
@@ -69,7 +69,7 @@ public:
      * @param firstDelivery True if this transfer marks the first time the message
      *                      reached its final destination; false otherwise.
      */
-    virtual void messageTransferred(Message msg, Host from, Host to, bool firstDelivery) = 0;
+    virtual void messageTransferred(Message& msg, Host& from, Host& to, bool firstDelivery) = 0;
 };
 
 } // namespace conesim
