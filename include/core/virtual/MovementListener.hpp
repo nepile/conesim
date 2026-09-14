@@ -31,7 +31,7 @@ public:
      * @param destination The target coordinate waypoint.
      * @param speed The velocity at which the host is moving towards the destination (in m/s).
      */
-    virtual void newDestination(Host host, Coord destination, double speed) = 0;
+    virtual void newDestination(Host& host, Coord& destination, double speed) = 0;
 
     /**
      * @brief Callback invoked to register a host's initial spawn coordinates at simulation start.
@@ -39,7 +39,7 @@ public:
      * @param host The host whose initial coordinates are being established.
      * @param location The starting spatial coordinates of the host.
      */
-    virtual void initialLocation(Host host, Coord location) = 0;
+    virtual void initialLocation(Host& host, Coord& location) = 0;
 };
 
 } // namespace conesim
