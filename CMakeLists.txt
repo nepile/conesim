@@ -18,11 +18,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(include)
 
-add_library(conesim_core
-    src/core/Configuration.cpp
-    src/core/SimulationClock.cpp
-    src/core/Debug.cpp
-)
+file(GLOB CORE_SOURCES src/core/*.cpp)
+add_library(conesim_core ${CORE_SOURCES})
+target_include_directories(conesim_core PUBLIC include)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -35,11 +33,9 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(run_tests
-    tests/core/test_Configuration.cpp
-    tests/core/test_SimulationClock.cpp
-    tests/core/test_Debug.cpp
-)
+file(GLOB TEST_SOURCES tests/core/*.cpp)
+add_executable(run_tests ${TEST_SOURCES})
+target_include_directories(run_tests PRIVATE include)
 
 target_link_libraries(run_tests
     conesim_core
