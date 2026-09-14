@@ -1,3 +1,10 @@
+/**
+ * @file Debug.cpp
+ * @brief Implementation of the Debug logging and timing utility.
+ * @author Neville
+ * @date September 2026
+ */
+
 #include "core/Debug.hpp"
 #include "core/SimulationClock.hpp"
 
@@ -20,7 +27,7 @@ void Debug::setPrintStream(std::ostream& outStrm) {
 }
 
 void Debug::p(const std::string& txt) {
-    p(txt, 0, false);    
+    p(txt, 0, false);
 }
 
 void Debug::p(const std::string& txt, int level) {
@@ -61,6 +68,10 @@ void Debug::startTiming(const std::string& cause) {
 }
 
 void Debug::doneTiming() {
+    if (timingStart == -1) {
+        return;
+    }
+
     long long end = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::system_clock::now().time_since_epoch()
     ).count();
@@ -69,8 +80,8 @@ void Debug::doneTiming() {
     if (diff > 0) {
         pt(timingCause + " took " + std::to_string(diff / 1000.0) + "s");
     }
-    
+
     timingStart = -1;
 }
 
-}
+} // namespace conesim
