@@ -1,5 +1,6 @@
 #pragma once
 
+// this is just dummy class. this is gonna remove when Host class has been defined.
 class Host;
 
 namespace conesim {
@@ -30,7 +31,7 @@ public:
      * @param host1 The first host involved in the connection.
      * @param host2 The second host involved in the connection.
      */
-    virtual void hostsConnected(Host host1, Host host2) = 0;
+    virtual void hostsConnected(Host& host1, Host& host2) = 0;
 
     /**
      * @brief Callback invoked when an active connection between two hosts is severed.
@@ -38,7 +39,7 @@ public:
      * @param host1 The first host involved in the disconnected link.
      * @param host2 The second host involved in the disconnected link.
      */
-    virtual void hostDisconnected(Host host1, Host host2) = 0;
+    virtual void hostDisconnected(Host& host1, Host& host2) = 0;
 };
 
 } // namespace conesim
