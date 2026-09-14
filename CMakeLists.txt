@@ -21,6 +21,7 @@ include_directories(include)
 add_library(conesim_core
     src/core/Configuration.cpp
     src/core/SimulationClock.cpp
+    src/core/Debug.cpp
 )
 
 include(FetchContent)
@@ -37,6 +38,7 @@ enable_testing()
 add_executable(run_tests
     tests/core/test_Configuration.cpp
     tests/core/test_SimulationClock.cpp
+    tests/core/test_Debug.cpp
 )
 
 target_link_libraries(run_tests
