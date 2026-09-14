@@ -1,9 +1,9 @@
-#include "core/virtual/MessageListener.hpp"
+#include "core/virtual/MovementListener.hpp"
 
 namespace conesim {
 
 /**
  * @brief Default virtual destructor implementation.
  */
-MessageListener::~MessageListener() = default;
+MovementListener::~MovementListener() = default;
 } // namespace conesim
