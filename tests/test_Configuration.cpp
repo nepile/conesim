@@ -2,13 +2,14 @@
 #include "core/Configuration.hpp"
 #include <fstream>
 #include <filesystem>
+#include "core/SimulationError.hpp"
+#include "core/ConfigurationError.hpp"
 
 using namespace conesim;
 
 class ConfigurationTest : public ::testing::Test {
 protected:
     void SetUp() override {
-        // Buat file config dummy sementara
         std::ofstream defFile("test_default.cfg");
         defFile << "Group.router = EpidemicRouter\n"
                 << "Group.bufferSize = 10M\n"
@@ -34,33 +35,25 @@ protected:
     }
 };
 
-// 1. Test basic getter & unit multiplier (M, k)
 TEST_F(ConfigurationTest, ParsesNumericMultipliers) {
     Configuration conf;
     EXPECT_DOUBLE_EQ(conf.getDouble("Group.bufferSize"), 10000000.0);
     EXPECT_EQ(conf.getInt("Group.bufferSize"), 10000000);
 }
 
-// 2. Test boolean parser
 TEST_F(ConfigurationTest, ParsesBoolean) {
     Configuration conf;
     EXPECT_TRUE(conf.getBoolean("Report.enabled"));
     EXPECT_FALSE(conf.getBoolean("NonExistent.key", false));
 }
 
-// 3. Test primary & secondary namespace resolution
 TEST_F(ConfigurationTest, ResolvesNamespaces) {
     Configuration conf("Group");
     conf.setSecondaryNamespace("MovementModel");
-
-    // Ditemukan di primary ("Group.router")
     EXPECT_EQ(conf.getConfiguration("router"), "EpidemicRouter");
-
-    // Fallback ke secondary ("MovementModel.rngSeed")
     EXPECT_EQ(conf.getInt("rngSeed"), 100);
 }
 
-// 4. Test run index array [10; 20; 30] dengan modulo
 TEST_F(ConfigurationTest, HandlesRunIndex) {
     Configuration conf;
     
@@ -70,12 +63,10 @@ TEST_F(ConfigurationTest, HandlesRunIndex) {
     Configuration::setRunIndex(1);
     EXPECT_EQ(conf.getInt("Group.nrofHosts"), 20);
 
-    // Modulo wrap-around: index 3 -> 3 % 3 = index 0 -> 10
     Configuration::setRunIndex(3);
     EXPECT_EQ(conf.getInt("Group.nrofHosts"), 10);
 }
 
-// 5. Test CSV parser
 TEST_F(ConfigurationTest, ParsesCsvSettings) {
     Configuration conf;
     std::vector<double> speed = conf.getCsvDoubles("Group.speed", 2);
@@ -84,9 +75,20 @@ TEST_F(ConfigurationTest, ParsesCsvSettings) {
     EXPECT_DOUBLE_EQ(speed[1], 4.5);
 }
 
-// 6. Test %% replacement
 TEST_F(ConfigurationTest, ReplacesDelimiters) {
     Configuration conf;
     std::string filled = conf.valueFillString("run_%%Group.router%%_output");
     EXPECT_EQ(filled, "run_EpidemicRouter_output");
+}
+
+TEST_F(ConfigurationTest, ThrowsConfigurationErrorOnMissingKey) {
+    Configuration conf;
+    EXPECT_THROW(conf.getConfiguration("NonExistent.Key"), ConfigurationError);
+    EXPECT_THROW(conf.getConfiguration("NonExistent.Key"), SimulationError);
+}
+
+TEST_F(ConfigurationTest, ThrowsConfigurationErrorOnInvalidNumeric) {
+    Configuration conf;
+    Configuration::addSetting("Test.badNumber", "123XYZ");
+    EXPECT_THROW(conf.getInt("Test.badNumber"), ConfigurationError);
 }

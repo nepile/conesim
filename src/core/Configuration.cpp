@@ -1,8 +1,8 @@
 #include "core/Configuration.hpp"
+#include "core/ConfigurationError.hpp"
 
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 #include <algorithm>
 #include <cctype>
 #include <cmath>
@@ -66,7 +66,7 @@ void Configuration::setNamespace(const std::string& name) {
 
 void Configuration::restoreNamespace() {
     if (oldNamespaces.empty()) {
-        throw std::runtime_error("No previous namespace to restore");
+        throw ConfigurationError("No previous namespace to restore");
     }
     namespaceName = oldNamespaces.top();
     oldNamespaces.pop();
@@ -79,7 +79,7 @@ void Configuration::setSecondaryNamespace(const std::string& name) {
 
 void Configuration::restoreSecondaryNamespace() {
     if (oldSecondaryNamespaces.empty()) {
-        throw std::runtime_error("No previous secondary namespace to restore");
+        throw ConfigurationError("No previous secondary namespace to restore");
     }
     secondaryNamespace = oldSecondaryNamespaces.top();
     oldSecondaryNamespaces.pop();
@@ -122,7 +122,7 @@ bool Configuration::contains(const std::string& name) const {
     try {
         std::string val = getConfiguration(name);
         return !val.empty();
-    } catch (const std::exception&) {
+    } catch (const ConfigurationError&) {
         return false;
     }
 }
@@ -201,7 +201,7 @@ std::string Configuration::getConfiguration(const std::string& name) const {
     }
 
     if (value.empty()) {
-        throw std::runtime_error("Can't find setting " + getPropertyNamesString(name));
+        throw ConfigurationError("Can't find setting " + getPropertyNamesString(name));
     }
 
     outputSetting(fullName + " = " + value);
@@ -211,7 +211,7 @@ std::string Configuration::getConfiguration(const std::string& name) const {
 std::string Configuration::getConfiguration(const std::string& name, const std::string& defaultValue) const {
     try {
         return getConfiguration(name);
-    } catch (const std::exception&) {
+    } catch (const ConfigurationError&) {
         return defaultValue;
     }
 }
@@ -219,14 +219,14 @@ std::string Configuration::getConfiguration(const std::string& name, const std::
 std::optional<std::string> Configuration::getOptionalConfiguration(const std::string& name) const {
     try {
         return getConfiguration(name);
-    } catch (const std::exception&) {
+    } catch (const ConfigurationError&) {
         return std::nullopt;
     }
 }
 
 double Configuration::parseDoubleValue(const std::string& value, const std::string& settingName) const {
     if (value.empty()) {
-        throw std::runtime_error("Empty numeric value for setting: " + settingName);
+        throw ConfigurationError("Empty numeric value for setting: " + settingName);
     }
 
     double multiplier = 1.0;
@@ -248,18 +248,18 @@ double Configuration::parseDoubleValue(const std::string& value, const std::stri
         std::size_t idx = 0;
         double parsed = std::stod(cleanVal, &idx);
         if (idx != cleanVal.size()) {
-            throw std::invalid_argument("Trailing characters");
+            throw ConfigurationError("Trailing characters in numeric value: " + cleanVal);
         }
         return parsed * multiplier;
     } catch (const std::exception& e) {
-        throw std::runtime_error("Invalid numeric setting '" + value + "' for '" + settingName + "'\n" + e.what());
+        throw ConfigurationError("Invalid numeric setting '" + value + "' for '" + settingName + "'", e);
     }
 }
 
 int Configuration::convertToInt(double doubleValue, const std::string& settingName) const {
     double intPart = 0.0;
     if (std::modf(doubleValue, &intPart) != 0.0) {
-        throw std::runtime_error("Expected integer value for setting '" + settingName + "' got '" + std::to_string(doubleValue) + "'");
+        throw ConfigurationError("Expected integer value for setting '" + settingName + "' got '" + std::to_string(doubleValue) + "'");
     }
     return static_cast<int>(doubleValue);
 }
@@ -271,7 +271,7 @@ double Configuration::getDouble(const std::string& name) const {
 double Configuration::getDouble(const std::string& name, double defaultValue) const {
     try {
         return getDouble(name);
-    } catch (const std::exception&) {
+    } catch (const ConfigurationError&) {
         return defaultValue;
     }
 }
@@ -279,7 +279,7 @@ double Configuration::getDouble(const std::string& name, double defaultValue) co
 std::optional<double> Configuration::getOptionalDouble(const std::string& name) const {
     try {
         return getDouble(name);
-    } catch (const std::exception&) {
+    } catch (const ConfigurationError&) {
         return std::nullopt;
     }
 }
@@ -291,7 +291,7 @@ int Configuration::getInt(const std::string& name) const {
 int Configuration::getInt(const std::string& name, int defaultValue) const {
     try {
         return getInt(name);
-    } catch (const std::exception&) {
+    } catch (const ConfigurationError&) {
         return defaultValue;
     }
 }
@@ -299,7 +299,7 @@ int Configuration::getInt(const std::string& name, int defaultValue) const {
 std::optional<int> Configuration::getOptionalInt(const std::string& name) const {
     try {
         return getInt(name);
-    } catch (const std::exception&) {
+    } catch (const ConfigurationError&) {
         return std::nullopt;
     }
 }
@@ -318,13 +318,13 @@ bool Configuration::getBoolean(const std::string& name) const {
         return false;
     }
 
-    throw std::runtime_error("Not a boolean value: '" + val + "' for setting " + name);
+    throw ConfigurationError("Not a boolean value: '" + val + "' for setting " + name);
 }
 
 bool Configuration::getBoolean(const std::string& name, bool defaultValue) const {
     try {
         return getBoolean(name);
-    } catch (const std::exception&) {
+    } catch (const ConfigurationError&) {
         return defaultValue;
     }
 }
@@ -332,7 +332,7 @@ bool Configuration::getBoolean(const std::string& name, bool defaultValue) const
 std::optional<bool> Configuration::getOptionalBoolean(const std::string& name) const {
     try {
         return getBoolean(name);
-    } catch (const std::exception&) {
+    } catch (const ConfigurationError&) {
         return std::nullopt;
     }
 }
@@ -364,9 +364,9 @@ std::vector<std::string> Configuration::getCsvSetting(const std::string& name) c
 std::vector<std::string> Configuration::getCsvSetting(const std::string& name, std::size_t expectedCount) const {
     std::vector<std::string> values = getCsvSetting(name);
     if (values.size() != expectedCount) {
-        throw std::runtime_error("Read unexpected amount (" + std::to_string(values.size()) +
-                                 ") of comma separated values for setting '" + name +
-                                 "' (expected " + std::to_string(expectedCount) + ")");
+        throw ConfigurationError("Read unexpected amount (" + std::to_string(values.size()) +
+                            ") of comma separated values for setting '" + name +
+                            "' (expected " + std::to_string(expectedCount) + ")");
     }
     return values;
 }
@@ -417,12 +417,12 @@ std::vector<int> Configuration::getCsvInts(const std::string& name, std::size_t 
 
 void Configuration::assertValidRange(const std::vector<int>& range, const std::string& name) const {
     if (range.size() != 2) {
-        throw std::runtime_error("Range setting " + getFullPropertyName(name) +
-                                 " should contain only two comma separated integer values");
+        throw ConfigurationError("Range setting " + getFullPropertyName(name) +
+                            " should contain only two comma separated integer values");
     }
     if (range[0] > range[1]) {
-        throw std::runtime_error("Range setting's " + getFullPropertyName(name) +
-                                 " first value should be smaller or equal to second value");
+        throw ConfigurationError("Range setting's " + getFullPropertyName(name) +
+                            " first value should be smaller or equal to second value");
     }
 }
 
@@ -459,6 +459,21 @@ std::string Configuration::valueFillString(const std::string& input) const {
     return result;
 }
 
+std::string Configuration::toString() const {
+    std::stringstream ss;
+    ss << "{";
+    bool first = true;
+    for (const auto& [key, val] : properties) {
+        if (!first) {
+            ss << ", ";
+        }
+        ss << key << "=" << val;
+        first = false;
+    }
+    ss << "}";
+    return ss.str();
+}
+
 void Configuration::addSetting(const std::string& name, const std::string& value) {
     properties[name] = value;
 }
@@ -471,7 +486,7 @@ void Configuration::loadFile(const std::string& filename) {
     std::ifstream file(filename);
 
     if (!file.is_open()) {
-        throw std::runtime_error("Failed to open configuration file: " + filename);
+        throw ConfigurationError("Failed to open configuration file: " + filename);
     }
 
     std::string line;
@@ -542,7 +557,7 @@ void Configuration::init(const std::string& propFile) {
             std::string cleanPath(start, end);
             fileStream = std::make_unique<std::ofstream>(cleanPath);
             if (!fileStream->is_open()) {
-                throw std::runtime_error("Can't open Settings output file: " + cleanPath);
+                throw ConfigurationError("Can't open Settings output file: " + cleanPath);
             }
             outStream = fileStream.get();
         }
