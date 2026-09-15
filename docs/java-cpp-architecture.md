@@ -2,12 +2,14 @@
 | :--- | :--- |
 | Settings | Configuration |
 | SimClock | SimulationClock |
-| DTNHost | Host |
+| DTNHost | DTNHost |
 | Message | Message |
 | Connection | Connection |
 | NetworkInterface | NetworkInterface |
 | MovementModel | MovementModel |
 | MessageRouter | MessageRouter |
 | Report | Report |
-| World | Simulation |
+| World | World |
 | EventQueue | EventQueue |
+| DTNSim | DTNSim |
+
