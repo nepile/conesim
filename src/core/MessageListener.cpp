@@ -1,4 +1,4 @@
-#include "core/virtual/MessageListener.hpp"
+#include "core/MessageListener.hpp"
 
 namespace conesim {
 

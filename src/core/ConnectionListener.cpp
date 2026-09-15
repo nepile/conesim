@@ -1,4 +1,4 @@
-#include "core/virtual/ConnectionListener.hpp"
+#include "core/ConnectionListener.hpp"
 
 namespace conesim {
 

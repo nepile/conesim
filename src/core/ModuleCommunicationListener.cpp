@@ -1,4 +1,4 @@
-#include "core/virtual/ModuleCommunicationListener.hpp"
+#include "core/ModuleCommunicationListener.hpp"
 
 namespace conesim {
 
