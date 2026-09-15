@@ -18,7 +18,6 @@
 #include <algorithm>
 #include <random>
 
-// Forward declarations to prevent circular dependencies
 class DTNHost;
 class Message;
 class Connection;
@@ -107,8 +106,6 @@ namespace routing
      */
     virtual MessageRouter *replicate() = 0;
 
-    // --- Message Management ---
-
     /**
      * @brief Tries to start receiving a message from another host.
      * @param m The incoming message.
@@ -131,8 +128,6 @@ namespace routing
     virtual void sendMessage(const std::string &id, DTNHost *to);
     virtual bool requestDeliverableMessages(Connection *con);
 
-    // --- Getters ---
-
     int getBufferSize() const;
     int getFreeBufferSize() const;
     int getNrofMessages() const;
@@ -140,8 +135,6 @@ namespace routing
     DTNHost *getHost() const;
     RoutingInfo getRoutingInfo() const;
     std::string toString() const;
-
-    // --- Application Management ---
 
     void addApplication(std::shared_ptr<Application> app);
     std::vector<std::shared_ptr<Application>> getApplications(const std::string &ID) const;
@@ -172,7 +165,7 @@ namespace routing
     {
       if (sendQueueMode == Q_MODE_RANDOM)
       {
-        // Assuming SimClock has its own RNG, or use std::random
+        // Assuming SimClock (SimulationClock) has its own RNG, or use std::random
         std::mt19937 rng(12345); // Replace seed with SimClock::getIntTime()
         std::shuffle(list.begin(), list.end(), rng);
       }
