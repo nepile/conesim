@@ -1,7 +1,7 @@
 #pragma once
 
 class Message;
-class Host;
+class DTNHost;
 
 namespace conesim {
 
@@ -41,8 +41,8 @@ public:
      */
     virtual void messageTransferStarted(
         const Message& msg, 
-        const Host& from, 
-        const Host& to) = 0;
+        const DTNHost& from, 
+        const DTNHost& to) = 0;
 
     /**
      * @brief Callback invoked when a message is deleted or dropped from a host's buffer.
@@ -54,7 +54,7 @@ public:
      */
     virtual void messageDeleted(
         const Message& msg, 
-        const Host& where, 
+        const DTNHost& where, 
         bool dropped) = 0;
 
     /**
@@ -66,8 +66,8 @@ public:
      */
     virtual void messageTransferAborted(
         const Message& msg, 
-        const Host& from, 
-        const Host& to) = 0;
+        const DTNHost& from, 
+        const DTNHost& to) = 0;
 
     /**
      * @brief Callback invoked when a message transfer successfully completes.
@@ -80,8 +80,8 @@ public:
      */
     virtual void messageTransferred(
         const Message& msg, 
-        const Host& from, 
-        const Host& to, 
+        const DTNHost& from, 
+        const DTNHost& to, 
         bool firstDelivery) = 0;
 };
 
