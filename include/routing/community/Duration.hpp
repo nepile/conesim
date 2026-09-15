@@ -9,7 +9,7 @@
 
 #include <string>
 
-namespace conesim::routing::community {
+namespace routing::community {
 
 /**
  * @class Duration
@@ -50,4 +50,4 @@ public:
     std::string getDuration() const;
 };
 
-} // namespace conesim::routing::community
+} // namespace routing::community

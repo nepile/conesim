@@ -12,7 +12,7 @@
 #include <iostream>
 #include <fstream>
 
-namespace conesim::core {
+namespace core {
 
 class Configuration;
 
@@ -861,4 +861,4 @@ public:
     );
 };
 
-} // namespace conesim
+} // namespace core

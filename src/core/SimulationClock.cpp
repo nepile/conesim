@@ -11,7 +11,7 @@
 #include <cmath>
 #include <string>
 
-namespace conesim::core {
+namespace core {
 
 double SimulationClock::clockTime = 0.0;
 SimulationClock* SimulationClock::clock = nullptr;
@@ -80,4 +80,4 @@ void SimulationClock::reset() {
     clockTime = 0.0;
 }
 
-} // namespace conesim
+} // namespace core

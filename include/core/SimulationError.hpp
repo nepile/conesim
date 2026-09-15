@@ -13,7 +13,7 @@
 #include <stdexcept>
 #include <exception>
 
-namespace conesim::core {
+namespace core {
 
 /**
  * @class SimulationError
@@ -68,4 +68,4 @@ public:
     }
 };
 
-} // namespace conesim
+} // namespace core

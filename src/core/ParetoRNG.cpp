@@ -11,7 +11,7 @@
 #include <limits>
 #include <random>
 
-namespace conesim::core {
+namespace core {
 
 ParetoRNG::ParetoRNG(std::mt19937& rng, double k, double minValue, double maxValue)
     : rng(rng),
@@ -33,4 +33,4 @@ double ParetoRNG::getDouble() {
     return x;
 }
 
-} // namespace conesim
+} // namespace core

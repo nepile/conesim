@@ -6,7 +6,7 @@
 #include "core/Debug.hpp"
 #include "core/SimulationClock.hpp"
 
-using namespace conesim::core;
+using namespace core;
 
 class DebugTest : public ::testing::Test {
 protected:

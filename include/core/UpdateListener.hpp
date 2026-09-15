@@ -3,7 +3,7 @@
 #include <vector>
 
 
-namespace conesim::core {
+namespace core {
 
 class DTNHost;
 
@@ -36,4 +36,4 @@ public:
     virtual void updated(const std::vector<DTNHost*>& hosts) = 0;
 };
 
-} // namespace conesim
+} // namespace core

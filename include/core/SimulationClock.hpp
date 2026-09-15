@@ -11,7 +11,7 @@
 
 #include <string>
 
-namespace conesim::core {
+namespace core {
 
 /**
  * @class SimulationClock
@@ -76,4 +76,4 @@ public:
     static void reset();
 };
 
-} // namespace conesim
+} // namespace core

@@ -11,7 +11,7 @@
 
 #include "core/SimulationError.hpp"
 
-namespace conesim::core {
+namespace core {
 
 /**
  * @class ConfigurationError
@@ -54,4 +54,4 @@ public:
         : SimulationError(cause, e) {}
 };
 
-} // namespace conesim
+} // namespace core

@@ -2,7 +2,7 @@
 
 #include "core/SimulationClock.hpp"
 
-using namespace conesim::core;
+using namespace core;
 
 class SimulationClockTest : public ::testing::Test {
 protected:

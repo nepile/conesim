@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 
-namespace conesim::core {
+namespace core {
 
 /**
  * @class Debug
@@ -91,4 +91,4 @@ public:
     static void doneTiming();
 };
 
-} // namespace conesim
+} // namespace core
