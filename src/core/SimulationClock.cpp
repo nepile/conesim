@@ -11,7 +11,7 @@
 #include <cmath>
 #include <string>
 
-namespace conesim {
+namespace conesim::core {
 
 double SimulationClock::clockTime = 0.0;
 SimulationClock* SimulationClock::clock = nullptr;

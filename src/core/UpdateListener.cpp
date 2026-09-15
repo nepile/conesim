@@ -1,6 +1,6 @@
-#include "core/virtual/UpdateListener.hpp"
+#include "core/UpdateListener.hpp"
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @brief Default virtual destructor implementation.

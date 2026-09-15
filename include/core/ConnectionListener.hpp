@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace conesim {
+namespace conesim::core {
     class DTNHost;
 
 /**

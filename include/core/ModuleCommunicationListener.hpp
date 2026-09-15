@@ -3,7 +3,7 @@
 #include <string>
 #include <any>
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @file ModuleCommunicationListener.hpp

@@ -17,7 +17,7 @@
 #include <cmath>
 #include <filesystem>
 
-namespace conesim {
+namespace conesim::core {
 
 // ============================================================================
 // ObjectFactory Implementation

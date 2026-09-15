@@ -12,7 +12,7 @@
 #include <iostream>
 #include <fstream>
 
-namespace conesim {
+namespace conesim::core {
 
 class Configuration;
 

@@ -11,7 +11,7 @@
 
 #include "core/SimulationError.hpp"
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @class ConfigurationError

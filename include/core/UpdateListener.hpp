@@ -3,7 +3,7 @@
 #include <vector>
 
 
-namespace conesim {
+namespace conesim::core {
 
 class DTNHost;
 
