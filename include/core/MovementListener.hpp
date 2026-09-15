@@ -1,6 +1,6 @@
 #pragma once
 
-class Host;
+class DTNHost;
 class Coord;
 
 namespace conesim {
@@ -32,7 +32,7 @@ public:
      * @param speed The velocity at which the host is moving towards the destination (in m/s).
      */
     virtual void newDestination(
-        const Host& host, 
+        const DTNHost& host, 
         const Coord& destination, 
         double speed) = 0;
 
@@ -43,7 +43,7 @@ public:
      * @param location The starting spatial coordinates of the host.
      */
     virtual void initialLocation(
-        const Host& host, 
+        const DTNHost& host, 
         const Coord& location) = 0;
 };
 

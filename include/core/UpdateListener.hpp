@@ -2,9 +2,10 @@
 
 #include <vector>
 
-class Host;
 
 namespace conesim {
+
+class DTNHost;
 
 /**
  * @file UpdateListener.hpp
@@ -32,7 +33,7 @@ public:
      * @param hosts Read-only reference to the list of active host pointers
      *              in the simulation for the current tick.
      */
-    virtual void updated(const std::vector<Host*>& hosts) = 0;
+    virtual void updated(const std::vector<DTNHost*>& hosts) = 0;
 };
 
 } // namespace conesim

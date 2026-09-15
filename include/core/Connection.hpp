@@ -12,11 +12,11 @@
 #include <memory>
 #include <string>
 
-namespace core {
+namespace conesim {
     class DTNHost;
     class NetworkInterface;
     class Message;
-
+    
     /**
      * @class Connection
      * @brief A connection between two DTN nodes.
