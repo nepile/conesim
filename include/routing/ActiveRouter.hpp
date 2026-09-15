@@ -4,7 +4,7 @@
  * @details Superclass for all active routers (e.g., Epidemic, Prophet).
  *          It provides convenience methods for buffer management, TTL checking,
  *          and actively watching/initiating sending connections during updates.
- * @author Frathol / Team
+ * @author Frathol
  * @date September, 2026
  */
 
@@ -14,9 +14,8 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <utility> // For std::pair
+#include <utility>
 
-// Forward declarations
 class DTNHost;
 class Message;
 class Connection;
@@ -58,8 +57,6 @@ namespace routing
 
     virtual ~ActiveRouter() = default;
 
-    // --- Lifecycle & State Overrides ---
-
     /**
      * @brief Initializes the router and its sending connections list.
      * @param host The host this router belongs to.
@@ -79,14 +76,10 @@ namespace routing
      */
     void update() override;
 
-    // --- Message Interaction Overrides ---
-
     bool requestDeliverableMessages(Connection *con) override;
     bool createNewMessage(std::shared_ptr<Message> m) override;
     int receiveMessage(Message *m, DTNHost *from) override;
     Message *messageTransferred(const std::string &id, DTNHost *from) override;
-
-    // --- State Checking ---
 
     /**
      * @brief Checks if this router is currently transferring data.
@@ -110,8 +103,6 @@ namespace routing
 
     /** Simulation time when the last TTL check was performed. */
     double lastTtlCheck;
-
-    // --- Transfer & Buffer Utilities ---
 
     /**
      * @brief Gets a list of connections this host currently has.
@@ -165,8 +156,6 @@ namespace routing
      */
     virtual Message *getOldestMessage(bool excludeMsgBeingSent);
 
-    // --- Smart Routing & Connection Handling ---
-
     /**
      * @brief Finds messages destined for directly connected hosts.
      * @return A vector of pairs, matching deliverable messages to their respective connections.
@@ -210,8 +199,6 @@ namespace routing
      */
     Connection *exchangeDeliverableMessages();
 
-    // --- Helpers ---
-
     /**
      * @brief Shuffles the order of messages in a list.
      * @param messages The vector of messages to shuffle.
@@ -223,8 +210,6 @@ namespace routing
      * @param con The connection to add.
      */
     void addToSendingConnections(Connection *con);
-
-    // --- Transfer Hook Methods (For Subclasses) ---
 
     /**
      * @brief Hook called just before a transfer is aborted (e.g., connection lost).
