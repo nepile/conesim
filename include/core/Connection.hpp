@@ -12,7 +12,7 @@
 #include <memory>
 #include <string>
 
-namespace conesim::core {
+namespace core {
     class DTNHost;
     class NetworkInterface;
     class Message;

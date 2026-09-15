@@ -17,7 +17,7 @@
 #include <cmath>
 #include <filesystem>
 
-namespace conesim::core {
+namespace core {
 
 // ============================================================================
 // ObjectFactory Implementation
@@ -830,4 +830,4 @@ void Configuration::init(const std::string& propFile) {
     }
 }
 
-} // namespace conesim
+} // namespace core

@@ -9,7 +9,7 @@
 
 #include <string>
 
-namespace conesim::routing::community {
+namespace routing::community {
 
     Duration::Duration(double start, double end) 
         : start(start), end(end) {} 
@@ -25,4 +25,4 @@ namespace conesim::routing::community {
     std::string Duration::getDuration() const {
         return "Start: " + std::to_string(start) + ", End: " + std::to_string(end);
     }
-} // namespace conesim::routing::community
+} // namespace routing::community

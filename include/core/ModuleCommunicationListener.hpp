@@ -3,7 +3,7 @@
 #include <string>
 #include <any>
 
-namespace conesim::core {
+namespace core {
 
 /**
  * @file ModuleCommunicationListener.hpp
@@ -38,4 +38,4 @@ public:
         const std::any& newValue) = 0;
 };
 
-} // namespace conesim
+} // namespace core

@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace conesim::core {
+namespace core {
     class DTNHost;
 
 /**
@@ -41,4 +41,4 @@ public:
     virtual void hostDisconnected(const DTNHost& host1, const DTNHost& host2) = 0;
 };
 
-} // namespace conesim
+} // namespace core

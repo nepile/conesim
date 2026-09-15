@@ -9,7 +9,7 @@
 
 #include <random>
 
-namespace conesim::core {
+namespace core {
 
 /**
  * @class ParetoRNG
@@ -44,4 +44,4 @@ public:
     double getDouble();
 };
 
-} // namespace conesim
+} // namespace core

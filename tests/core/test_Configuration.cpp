@@ -5,7 +5,7 @@
 #include "core/SimulationError.hpp"
 #include "core/ConfigurationError.hpp"
 
-using namespace conesim::core;
+using namespace core;
 
 class ConfigurationTest : public ::testing::Test {
 protected:

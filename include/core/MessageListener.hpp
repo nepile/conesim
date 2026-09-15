@@ -3,7 +3,7 @@
 class Message;
 class DTNHost;
 
-namespace conesim::core {
+namespace core {
 
 /**
  * @file MessageListener.hpp
@@ -85,4 +85,4 @@ public:
         bool firstDelivery) = 0;
 };
 
-} // namespace conesim
+} // namespace core

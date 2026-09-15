@@ -8,7 +8,7 @@
 #include "routing/community/Duration.hpp"
 #include <gtest/gtest.h>
 
-using namespace conesim::routing::community;
+using namespace routing::community;
 
 /**
  * @brief Test fixture for Duration class testing.
