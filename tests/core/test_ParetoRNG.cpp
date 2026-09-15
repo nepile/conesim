@@ -12,7 +12,8 @@
 
 #include "core/ParetoRNG.hpp"
 
-using namespace conesim;
+using namespace conesim::core;
+
 
 class ParetoRNGTest : public ::testing::Test {
 protected:

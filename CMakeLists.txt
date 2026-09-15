@@ -14,37 +14,59 @@ project(conesim
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# set(CMAKE_CXX_EXTENSIONS OFF)
 
 include_directories(include)
 
+# ==========================================
+# 1. TARGET: conesim_core
+# ==========================================
 file(GLOB CORE_SOURCES src/core/*.cpp)
 add_library(conesim_core ${CORE_SOURCES})
 target_include_directories(conesim_core PUBLIC include)
 
+# ==========================================
+# 2. TARGET: conesim_routing
+# ==========================================
+file(GLOB ROUTING_SOURCES src/routing/community/*.cpp)
+add_library(conesim_routing ${ROUTING_SOURCES})
+target_include_directories(conesim_routing PUBLIC include)
+
+# Connecting routing to the core, as the routing module requires the system core.
+target_link_libraries(conesim_routing PUBLIC conesim_core)
+
+# ==========================================
+# 3. DEPENDENCY: GoogleTest
+# ==========================================
 include(FetchContent)
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+  URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.tar.gz
 )
-# For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+# ==========================================
+# 4. TARGET: run_tests (Unit Testing)
+# ==========================================
 enable_testing()
 
-file(GLOB TEST_SOURCES tests/core/*.cpp)
+# Collect all test files from the core and routing folders
+file(GLOB TEST_SOURCES tests/core/*.cpp tests/routing/*.cpp)
 add_executable(run_tests ${TEST_SOURCES})
 target_include_directories(run_tests PRIVATE include)
 
+# Simply link to conesim_routing, as it will automatically pull in conesim_core.
 target_link_libraries(run_tests
-    conesim_core
+    conesim_routing
     GTest::gtest_main
 )
 
 include(GoogleTest)
 gtest_discover_tests(run_tests)
 
+# ==========================================
+# 5. DOKUMENTASI: Doxygen
+# ==========================================
 find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
