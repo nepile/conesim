@@ -11,7 +11,7 @@
 #include <iostream>
 #include <chrono>
 
-namespace conesim {
+namespace conesim::core {
 
 std::ostream* Debug::out = &std::cout;
 int Debug::debugLevel = 0;

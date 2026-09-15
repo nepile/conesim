@@ -11,7 +11,7 @@
 
 #include <string>
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @class SimulationClock

@@ -3,7 +3,7 @@
 class Message;
 class DTNHost;
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @file MessageListener.hpp

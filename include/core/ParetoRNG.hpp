@@ -9,7 +9,7 @@
 
 #include <random>
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @class ParetoRNG

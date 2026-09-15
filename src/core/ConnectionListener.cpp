@@ -1,6 +1,6 @@
 #include "core/ConnectionListener.hpp"
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @brief Default virtual destructor implementation.

@@ -3,7 +3,7 @@
 class DTNHost;
 class Coord;
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @file MovementListener.hpp

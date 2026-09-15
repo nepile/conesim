@@ -1,6 +1,6 @@
 #include "core/MovementListener.hpp"
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @brief Default virtual destructor implementation.

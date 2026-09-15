@@ -13,7 +13,7 @@
 #include <stdexcept>
 #include <exception>
 
-namespace conesim {
+namespace conesim::core {
 
 /**
  * @class SimulationError
