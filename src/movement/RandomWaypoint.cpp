@@ -5,7 +5,7 @@
 namespace movement {
 
 RandomWaypoint::RandomWaypoint(const core::Configuration& settings) 
-    : MovementModel(settings) 
+    : MovementModel(settings), lastWaypoint(0.0, 0.0)
 {
 }
 
