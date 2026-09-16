@@ -38,10 +38,17 @@ file(GLOB MOVEMENT_SOURCES src/movement/*.cpp)
 add_library(conesim_movement ${MOVEMENT_SOURCES})
 target_include_directories(conesim_movement PUBLIC include)
 
+# ==========================================
+# 4. TARGET: conesim_interfaces
+# ==========================================
+file(GLOB INTERFACES_SOURCES src/interfaces/*.cpp)
+add_library(conesim_interfaces ${INTERFACES_SOURCES})
+target_include_directories(conesim_interfaces PUBLIC include)
 
 # Connecting routing to the core, as the routing module requires the system core.
 target_link_libraries(conesim_routing PUBLIC conesim_core)
 target_link_libraries(conesim_movement PUBLIC conesim_core)
+target_link_libraries(conesim_interfaces PUBLIC conesim_core)
 
 # ==========================================
 # 3. DEPENDENCY: GoogleTest
@@ -64,6 +71,7 @@ file(GLOB TEST_SOURCES
     tests/core/*.cpp 
     tests/routing/community/*.cpp 
     tests/movement/*.cpp
+    tests/interfaces/*.cpp
 )
 
 add_executable(run_tests ${TEST_SOURCES})
@@ -74,6 +82,7 @@ target_link_libraries(run_tests
     PRIVATE
     conesim_routing
     conesim_movement
+    conesim_interfaces
     GTest::gtest_main
 )
 
