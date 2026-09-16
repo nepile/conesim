@@ -168,10 +168,6 @@ namespace core
     return true;
   }
 
-  // ============================================================================
-  // Connection Management
-  // ============================================================================
-
   /**
    * @brief Internally links two network interfaces via a connection object.
    * @details Registers bidirectional links and broadcasts CON_UP events to listeners.
