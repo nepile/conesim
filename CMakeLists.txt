@@ -18,28 +18,28 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include_directories(include)
 
 # ==========================================
-# 1. TARGET: conesim_core
+# TARGET: conesim_core
 # ==========================================
 file(GLOB CORE_SOURCES src/core/*.cpp)
 add_library(conesim_core ${CORE_SOURCES})
 target_include_directories(conesim_core PUBLIC include)
 
 # ==========================================
-# 2. TARGET: conesim_routing
+# TARGET: conesim_routing
 # ==========================================
 file(GLOB ROUTING_SOURCES src/routing/*.cpp src/routing/community/*.cpp)
 add_library(conesim_routing ${ROUTING_SOURCES})
 target_include_directories(conesim_routing PUBLIC include)
 
 # ==========================================
-# 3. TARGET: conesim_movement
+# TARGET: conesim_movement
 # ==========================================
 file(GLOB MOVEMENT_SOURCES src/movement/*.cpp)
 add_library(conesim_movement ${MOVEMENT_SOURCES})
 target_include_directories(conesim_movement PUBLIC include)
 
 # ==========================================
-# 4. TARGET: conesim_input
+# TARGET: conesim_input
 # ==========================================
 file(GLOB INPUT_SOURCES src/input/*.cpp)
 add_library(conesim_input ${INPUT_SOURCES})
@@ -51,7 +51,7 @@ target_link_libraries(conesim_movement PUBLIC conesim_core)
 target_link_libraries(conesim_input PUBLIC conesim_core)
 
 # ==========================================
-# 4. DEPENDENCY: GoogleTest
+# DEPENDENCY: GoogleTest
 # ==========================================
 include(FetchContent)
 FetchContent_Declare(
@@ -62,7 +62,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # ==========================================
-# 5. TARGET: run_tests (Unit Testing)
+# TARGET: run_tests (Unit Testing)
 # ==========================================
 enable_testing()
 
@@ -90,7 +90,7 @@ include(GoogleTest)
 gtest_discover_tests(run_tests)
 
 # ==========================================
-# 6. DOKUMENTASI: Doxygen
+# DOKUMENTASI: Doxygen
 # ==========================================
 find_package(Doxygen)
 
