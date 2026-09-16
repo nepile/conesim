@@ -7,8 +7,7 @@
  * Released under GPLv3. See LICENSE.txt for details. 
  */
 
-#ifndef MESSAGE_HPP
-#define MESSAGE_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -261,5 +260,3 @@ namespace core {
     };
 
 } // namespace core
-
-#endif // MESSAGE_HPP
