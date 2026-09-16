@@ -21,13 +21,19 @@ include_directories(include)
 # 1. TARGET: conesim_core
 # ==========================================
 file(GLOB CORE_SOURCES src/core/*.cpp)
-add_library(conesim_core ${CORE_SOURCES}
-        src/movement/MovementModel.h
-        include/movement/MovementModel.hpp)
+add_library(conesim_core ${CORE_SOURCES})
 target_include_directories(conesim_core PUBLIC include)
 
 # ==========================================
-# 2. TARGET: conesim_routing
+# 2. TARGET: conesim_movement
+# ==========================================
+file(GLOB MOVEMENT_SOURCES src/movement/*.cpp)
+add_library(conesim_movement ${MOVEMENT_SOURCES})
+target_include_directories(conesim_movement PUBLIC include)
+target_link_libraries(conesim_movement PUBLIC conesim_core)
+
+# ==========================================
+# 3. TARGET: conesim_routing
 # ==========================================
 file(GLOB ROUTING_SOURCES src/routing/*.cpp src/routing/community/*.cpp)
 add_library(conesim_routing ${ROUTING_SOURCES})
@@ -37,7 +43,7 @@ target_include_directories(conesim_routing PUBLIC include)
 target_link_libraries(conesim_routing PUBLIC conesim_core)
 
 # ==========================================
-# 3. DEPENDENCY: GoogleTest
+# 4. DEPENDENCY: GoogleTest
 # ==========================================
 include(FetchContent)
 FetchContent_Declare(
@@ -48,18 +54,19 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # ==========================================
-# 4. TARGET: run_tests (Unit Testing)
+# 5. TARGET: run_tests (Unit Testing)
 # ==========================================
 enable_testing()
 
-# Collect all test files from the core and routing folders
-file(GLOB TEST_SOURCES tests/core/*.cpp tests/routing/community/*.cpp)
+# Collect all test files from the core, movement and routing folders
+file(GLOB TEST_SOURCES tests/core/*.cpp tests/movement/*.cpp tests/routing/community/*.cpp)
 add_executable(run_tests ${TEST_SOURCES})
 target_include_directories(run_tests PRIVATE include)
 
-# Simply link to conesim_routing, as it will automatically pull in conesim_core.
+# Link routing and movement
 target_link_libraries(run_tests
     conesim_routing
+    conesim_movement
     GTest::gtest_main
 )
 
@@ -67,7 +74,7 @@ include(GoogleTest)
 gtest_discover_tests(run_tests)
 
 # ==========================================
-# 5. DOKUMENTASI: Doxygen
+# 6. DOKUMENTASI: Doxygen
 # ==========================================
 find_package(Doxygen)
 
