@@ -28,6 +28,9 @@ namespace core {
     class NetworkInterface;
     class Application;
     class EventQueueHandler;
+}
+
+namespace input {
     class EventQueue;
 }
 
@@ -138,7 +141,7 @@ public:
     double getUpdateInterval() const;
     double getMaxHostRange() const;
 
-    std::vector<std::shared_ptr<EventQueue>> getExternalEvents() const;
+    std::vector<std::shared_ptr<input::EventQueue>> getExternalEvents() const;
     std::shared_ptr<movement::SimMap> getMap() const;
 
     void addConnectionListener(std::shared_ptr<ConnectionListener> cl);

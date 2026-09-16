@@ -111,7 +111,7 @@ double SimulationScenario::getEndTime() const { return endTime; }
 double SimulationScenario::getUpdateInterval() const { return updateInterval; }
 double SimulationScenario::getMaxHostRange() const { return maxHostRange; }
 
-std::vector<std::shared_ptr<EventQueue>> SimulationScenario::getExternalEvents() const {
+std::vector<std::shared_ptr<input::EventQueue>> SimulationScenario::getExternalEvents() const {
     return {};
 }
 
