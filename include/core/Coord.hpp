@@ -3,6 +3,8 @@
  * @brief Definition of conesim::Coord (2D coordinate representation).
  * @author Agra
  * @date September
+ * 
+ * Ported from Aalto University, ComNet (Java) to C++
  */
 
 #pragma once
@@ -12,50 +14,98 @@
 
 namespace core {
 
+/**
+ * Class to hold 2D coordinates and perform simple arithmetics and
+ * transformations
+ */
 class Coord {
-    private:
-        double x;
-        double y;
+private:
+    double x;
+    double y;
 
-    public:
-        Coord(double x, double y);
+public:
+    /**
+     * Constructor.
+     * @param x Initial X-coordinate
+     * @param y Initial Y-coordinate
+     */
+    Coord(double x, double y);
 
-        Coord(const Coord& other) = default;
+    // Copy Constructor (opsional, tapi baik untuk kejelasan)
+    Coord(const Coord& other) = default;
 
-        void setLocation(double x, double y);
+    /**
+     * Sets the location of this coordinate object
+     */
+    void setLocation(double x, double y);
 
-        void setLocation(const Coord &c);
+    /**
+     * Sets this coordinate's location to be equal to other
+     * coordinates location
+     */
+    void setLocation(const Coord& c);
 
-        void translate(double dx, double dy);
+    /**
+     * Moves the point by dx and dy
+     */
+    void translate(double dx, double dy);
 
-        double distance(const Coord &other) const;
+    /**
+     * Returns the distance to another coordinate
+     */
+    double distance(const Coord& other) const;
 
-        double getX() const;
+    /**
+     * Returns the x coordinate
+     */
+    double getX() const;
 
-        double getY() const;
+    /**
+     * Returns the y coordinate
+     */
+    double getY() const;
 
-        std::string toString() const;
+    /**
+     * Returns a text representation of the coordinate (rounded to 2 decimals)
+     */
+    std::string toString() const;
 
-        Coord clone() const;
+    /**
+     * Returns a clone of this coordinate.
+     * Note: In C++, returning by value naturally creates a copy.
+     */
+    Coord clone() const;
 
-        bool equals(const Coord &c) const;
+    /**
+     * Checks if this coordinate's location is equal to other coordinate's
+     */
+    bool equals(const Coord& c) const;
 
-        bool operator==(const Coord &other) const;
+    bool operator==(const Coord& o) const;
 
-        // bool operator!=(const Coord &other) const;
-        std::size_t hashCode() const;
+    /**
+     * Returns a hash code for this coordinate
+     */
+    std::size_t hashCode() const;
 
-        int compareTo(const Coord &other) const;
+    /**
+     * Compares this coordinate to other coordinate. 
+     * @return -1, 0 or 1
+     */
+    int compareTo(const Coord& other) const;
 
-        bool operator<(const Coord &other) const;
+    bool operator<(const Coord& other) const;
 
-        static bool areClose(const Coord &c1, const Coord &c2, double range);
-    };
+    /**
+     * Checks whether two coordinates are close enough to be considered close.
+     */
+    static bool areClose(const Coord& c1, const Coord& c2, double range);
+};
 
 } // namespace core
 
-namespace std
-{
+// Spesialisasi std::hash to makeCoord bisa dipakai di unordered_map/unordered_set
+namespace std {
     template <>
     struct hash<core::Coord> {
         std::size_t operator()(const core::Coord& c) const {
