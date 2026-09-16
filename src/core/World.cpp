@@ -11,11 +11,13 @@
 #include "core/ConfigurationError.hpp"
 #include "core/SimulationClock.hpp"
 #include "core/SimulationError.hpp"
+#include "input/EventQueue.hpp"
 
 #include <algorithm>
 #include <random>
 #include <cassert>
 #include <iostream>
+#include <limits>
 
 namespace core {
 
@@ -89,13 +91,12 @@ void World::warmupMovementModel(double time) {
 }
 
 void World::setNextEventQueue() {
-    // TODO: Implement EventQueue traversal when input module is available
-    /*
-    std::shared_ptr<input::EventQueue> nextQueue = scheduledUpdates;
-    double earliest = nextQueue->nextEventsTime();
+    // TODO: Revert to using ScheduledUpdatesQueue once it is implemented.
+    std::shared_ptr<input::EventQueue> nextQueue = nullptr;
+    double earliest = std::numeric_limits<double>::max();
 
     for (auto& eq : eventQueues) {
-        if (eq->nextEventsTime() < earliest) {
+        if (eq && eq->nextEventsTime() < earliest) {
             nextQueue = eq;
             earliest = eq->nextEventsTime();
         }
@@ -103,8 +104,6 @@ void World::setNextEventQueue() {
 
     this->nextEventQueue = nextQueue;
     this->nextQueueEventTime = earliest;
-    */
-    this->nextQueueEventTime = 1e9; // Dummy value to prevent infinite loop for now
 }
 
 void World::update() {
