@@ -21,7 +21,9 @@ include_directories(include)
 # 1. TARGET: conesim_core
 # ==========================================
 file(GLOB CORE_SOURCES src/core/*.cpp)
-add_library(conesim_core ${CORE_SOURCES})
+add_library(conesim_core ${CORE_SOURCES}
+        src/movement/MovementModel.h
+        include/movement/MovementModel.hpp)
 target_include_directories(conesim_core PUBLIC include)
 
 # ==========================================

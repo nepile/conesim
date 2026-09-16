@@ -1,8 +1,10 @@
 /**
-* @file MovementModel.hpp
- * @brief Header definition of the MovementModel base class.
+ * @file MovementModel.hpp
+ * @brief Superclass/Abstraction for all movement models.
  * @details Superclass for all active movement (e.g., RandomWaypoint, RandomWalk).
- *          
+ *          This class is adapted from The ONE simulator's MovementModel.java.
+ *          All subclasses must implement getPath(), getInitialLocation(),
+ *          and replicate().
  * @author Opeteer
  * @date September, 2026
  */
@@ -17,6 +19,8 @@
 #include "core/Configuration.hpp"
 #include "core/Coord.hpp"
 
+// Forward declarations for classes that might not be implemented yet
+// Might be Modified in the future
 namespace core {
     class ModuleCommunicationBus;
 }
@@ -26,13 +30,6 @@ namespace movement {
 class Path;
 class ActivenessHandler;
 
-/**
- * @brief Superclass/Abstraksi untuk semua model pergerakan (Movement Model).
- * 
- * Class ini diadaptasi dari MovementModel.java milik The ONE simulator.
- * Semua subclass harus mengimplementasikan getPath(), getInitialLocation(),
- * dan replicate().
- */
 class MovementModel {
 public:
     static const std::string SPEED;
@@ -46,7 +43,7 @@ public:
     static const std::string RNG_SEED;
 
 protected:
-    // Random number generator yang digunakan bersama oleh semua movement model
+    // Random number generator shared by all movement models
     static std::mt19937 rng;
     static bool rngInitialized;
 
@@ -63,25 +60,28 @@ protected:
     std::shared_ptr<core::ModuleCommunicationBus> comBus;
 
     /**
-     * @brief Memastikan nilai min tidak lebih besar dari max dan keduanya positif
+     * @brief Checks that the minimum setting is not bigger than the maximum and that both are positive.
+     * @param name Name of the setting
+     * @param min The minimum setting
+     * @param max The maximum setting
      */
     static void checkMinAndMaxSetting(const std::string& name, double min, double max);
 
 public:
     /**
-     * @brief Constructor kosong untuk keperluan testing
+     * @brief Empty constructor for testing purposes.
      */
     MovementModel();
 
     /**
-     * @brief Constructor utama berdasarkan objek Configuration
-     * @param settings Objek Configuration untuk membaca pengaturan setting
+     * @brief Creates a new MovementModel based on a Configuration object's settings.
+     * @param settings The Configuration object where the settings are read from
      */
     explicit MovementModel(const core::Configuration& settings);
 
     /**
-     * @brief Copy-constructor untuk menduplikasi model
-     * @param mm Objek MovementModel prototipe
+     * @brief Copy-constructor. Creates a new MovementModel based on the given prototype.
+     * @param mm The MovementModel prototype to base the new object on
      */
     MovementModel(const MovementModel& mm);
 
@@ -98,30 +98,26 @@ public:
 
     virtual std::string toString() const;
 
-    // =========================================================================
-    // Pure Virtual Methods (Harus diimplementasikan oleh Subclass)
-    // =========================================================================
-
     /**
-     * @brief Mengembalikan Path / Rute baru untuk node.
-     * @return Objek Path baru.
+     * @brief Returns a new path by this movement model.
+     * @return A new path.
      */
     virtual Path getPath() = 0;
 
     /**
-     * @brief Mengembalikan titik koordinat awal tempat node diletakkan.
-     * @return Koordinat awal (Coord).
+     * @brief Returns a new initial placement for a node.
+     * @return The initial coordinates.
      */
     virtual core::Coord getInitialLocation() = 0;
 
     /**
-     * @brief Membuat dan mengembalikan replika dari model pergerakan ini.
-     * @return shared_ptr menuju MovementModel baru yang identik.
+     * @brief Creates a replicate of the movement model.
+     * @return A shared_ptr to a new movement model with the same settings as this model.
      */
     virtual std::shared_ptr<MovementModel> replicate() const = 0;
 
     /**
-     * @brief Mereset field statis (seperti RNG) ke kondisi default.
+     * @brief Resets all static fields to default values.
      */
     static void reset();
 
