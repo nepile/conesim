@@ -18,7 +18,7 @@ namespace input {
 
     class EventQueue {
     public:
-        virtual ~EventQueue() = default;
+        virtual ~EventQueue();
 
         /**
          * Returns the next event in the queue or ExternalEvent with time of
