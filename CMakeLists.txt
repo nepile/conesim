@@ -31,8 +31,17 @@ file(GLOB ROUTING_SOURCES src/routing/*.cpp src/routing/community/*.cpp)
 add_library(conesim_routing ${ROUTING_SOURCES})
 target_include_directories(conesim_routing PUBLIC include)
 
+# ==========================================
+# 3. TARGET: conesim_movement
+# ==========================================
+file(GLOB MOVEMENT_SOURCES src/movement/*.cpp)
+add_library(conesim_movement ${MOVEMENT_SOURCES})
+target_include_directories(conesim_movement PUBLIC include)
+
+
 # Connecting routing to the core, as the routing module requires the system core.
 target_link_libraries(conesim_routing PUBLIC conesim_core)
+target_link_libraries(conesim_movement PUBLIC conesim_core)
 
 # ==========================================
 # 3. DEPENDENCY: GoogleTest
@@ -51,13 +60,20 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 # Collect all test files from the core and routing folders
-file(GLOB TEST_SOURCES tests/core/*.cpp tests/routing/community/*.cpp)
+file(GLOB TEST_SOURCES 
+    tests/core/*.cpp 
+    tests/routing/community/*.cpp 
+    tests/movement/*.cpp
+)
+
 add_executable(run_tests ${TEST_SOURCES})
 target_include_directories(run_tests PRIVATE include)
 
 # Simply link to conesim_routing, as it will automatically pull in conesim_core.
 target_link_libraries(run_tests
+    PRIVATE
     conesim_routing
+    conesim_movement
     GTest::gtest_main
 )
 
