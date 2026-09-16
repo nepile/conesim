@@ -18,7 +18,7 @@
 
 namespace core {
 
-    // Forward declaration untuk menghindari include sirkular
+    // Forward declaration to overcome circular dependency
     class DTNHost;
 
     /**
