@@ -8,6 +8,8 @@
 
 #include "core/SimulationScenario.hpp"
 #include "core/ConfigurationError.hpp"
+#include "core/Configuration.hpp"
+#include "movement/MovementModel.hpp"
 
 namespace core {
 
@@ -46,7 +48,34 @@ const std::string SimulationScenario::APP_PACKAGE = "applications.";
 std::shared_ptr<SimulationScenario> SimulationScenario::myinstance = nullptr;
 
 SimulationScenario::SimulationScenario() {
-    // Constructor placeholder
+    core::Configuration config(SCENARIO_NS);
+    
+    nrofGroups = config.getInt(NROF_GROUPS_S);
+    this->name = config.valueFillString(config.getConfiguration(NAME_S));
+    this->endTime = config.getDouble(END_TIME_S);
+    this->updateInterval = config.getDouble(UP_INT_S);
+    this->simulateConns = config.getBoolean(SIM_CON_S);
+
+    ensurePositiveValue(nrofGroups, NROF_GROUPS_S);
+    ensurePositiveValue(endTime, END_TIME_S);
+    ensurePositiveValue(updateInterval, UP_INT_S);
+
+    this->simMap = nullptr;
+    this->maxHostRange = 1.0;
+
+    // TODO: Initialize EventQueueHandler when implemented
+    // this->eqHandler = std::make_shared<EventQueueHandler>();
+
+    config.setNamespace(movement::MovementModel::MOVEMENT_MODEL_NS);
+    auto worldSize = config.getCsvInts(movement::MovementModel::WORLD_SIZE, 2);
+    this->worldSizeX = worldSize[0];
+    this->worldSizeY = worldSize[1];
+    
+    createHosts();
+    
+    // TODO: Initialize World when implemented
+    // this->world = std::make_shared<World>(hosts, worldSizeX, worldSizeY, updateInterval, 
+    //         updateListeners, simulateConns, eqHandler->getEventQueues());
 }
 
 std::shared_ptr<SimulationScenario> SimulationScenario::getInstance() {
