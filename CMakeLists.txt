@@ -30,6 +30,7 @@ target_include_directories(conesim_core PUBLIC include)
 file(GLOB MOVEMENT_SOURCES src/movement/*.cpp)
 add_library(conesim_movement ${MOVEMENT_SOURCES})
 target_include_directories(conesim_movement PUBLIC include)
+
 target_link_libraries(conesim_movement PUBLIC conesim_core)
 
 # ==========================================
