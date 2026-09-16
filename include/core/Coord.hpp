@@ -8,18 +8,19 @@
 #pragma once
 
 #include <string>
+#include <functional>
 
-namespace conesim
-{
+namespace core {
 
-    class Coord
-    {
+class Coord {
     private:
         double x;
         double y;
 
     public:
         Coord(double x, double y);
+
+        Coord(const Coord& other) = default;
 
         void setLocation(double x, double y);
 
@@ -41,7 +42,8 @@ namespace conesim
 
         bool operator==(const Coord &other) const;
 
-        bool operator!=(const Coord &other) const;
+        // bool operator!=(const Coord &other) const;
+        std::size_t hashCode() const;
 
         int compareTo(const Coord &other) const;
 
@@ -50,13 +52,14 @@ namespace conesim
         static bool areClose(const Coord &c1, const Coord &c2, double range);
     };
 
-} // namespace conesim
+} // namespace core
 
 namespace std
 {
     template <>
-    struct hash<conesim::Coord>
-    {
-        std::size_t operator()(const conesim::Coord &c) const noexcept;
+    struct hash<core::Coord> {
+        std::size_t operator()(const core::Coord& c) const {
+            return c.hashCode();
+        }
     };
 }
