@@ -25,23 +25,23 @@ add_library(conesim_core ${CORE_SOURCES})
 target_include_directories(conesim_core PUBLIC include)
 
 # ==========================================
-# 2. TARGET: conesim_movement
-# ==========================================
-file(GLOB MOVEMENT_SOURCES src/movement/*.cpp)
-add_library(conesim_movement ${MOVEMENT_SOURCES})
-target_include_directories(conesim_movement PUBLIC include)
-
-target_link_libraries(conesim_movement PUBLIC conesim_core)
-
-# ==========================================
-# 3. TARGET: conesim_routing
+# 2. TARGET: conesim_routing
 # ==========================================
 file(GLOB ROUTING_SOURCES src/routing/*.cpp src/routing/community/*.cpp)
 add_library(conesim_routing ${ROUTING_SOURCES})
 target_include_directories(conesim_routing PUBLIC include)
 
-# Connecting routing to the core, as the routing module requires the system core.
+# ==========================================
+# 3. TARGET: conesim_movement
+# ==========================================
+file(GLOB MOVEMENT_SOURCES src/movement/*.cpp)
+add_library(conesim_movement ${MOVEMENT_SOURCES})
+target_include_directories(conesim_movement PUBLIC include)
+
+
+# Connecting modules to the core, as they require the system core.
 target_link_libraries(conesim_routing PUBLIC conesim_core)
+target_link_libraries(conesim_movement PUBLIC conesim_core)
 
 # ==========================================
 # 4. DEPENDENCY: GoogleTest
@@ -59,13 +59,19 @@ FetchContent_MakeAvailable(googletest)
 # ==========================================
 enable_testing()
 
-# Collect all test files from the core, movement and routing folders
-file(GLOB TEST_SOURCES tests/core/*.cpp tests/movement/*.cpp tests/routing/community/*.cpp)
+# Collect all test files from the core, routing and movement folders
+file(GLOB TEST_SOURCES 
+    tests/core/*.cpp 
+    tests/routing/community/*.cpp 
+    tests/movement/*.cpp
+)
+
 add_executable(run_tests ${TEST_SOURCES})
 target_include_directories(run_tests PRIVATE include)
 
 # Link routing and movement
 target_link_libraries(run_tests
+    PRIVATE
     conesim_routing
     conesim_movement
     GTest::gtest_main
