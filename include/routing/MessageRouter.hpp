@@ -18,13 +18,17 @@
 #include <algorithm>
 #include <random>
 
-class DTNHost;
-class Message;
-class Connection;
-class MessageListener;
+// Forward declare core classes inside the core namespace
+namespace core {
+    class DTNHost;
+    class Message;
+    class Connection;
+    class MessageListener;
+    class RoutingInfo;
+}
+
 class Settings;
 class Application;
-class RoutingInfo;
 
 namespace routing
 {
@@ -87,7 +91,7 @@ namespace routing
      * @param host The host owning this router.
      * @param mListeners List of listeners for message-related events.
      */
-    virtual void init(DTNHost *host, const std::vector<std::shared_ptr<MessageListener>> &mListeners);
+    virtual void init(core::DTNHost *host, const std::vector<std::shared_ptr<core::MessageListener>> &mListeners);
 
     /**
      * @brief Called every simulation tick to update the router status.
@@ -98,7 +102,7 @@ namespace routing
      * @brief Informs the router about a change in connection state.
      * @param con The connection that changed.
      */
-    virtual void changedConnection(Connection *con) = 0;
+    virtual void changedConnection(core::Connection *con) = 0;
 
     /**
      * @brief Creates a replica of this router with empty buffers and routing tables.
@@ -112,7 +116,7 @@ namespace routing
      * @param from The sending host.
      * @return RCV_OK if accepted, or a DENIED_* / TRY_LATER_BUSY code if rejected.
      */
-    virtual int receiveMessage(Message *m, DTNHost *from);
+    virtual int receiveMessage(core::Message *m, core::DTNHost *from);
 
     /**
      * @brief Called after a message is successfully transferred to confirm delivery.
@@ -120,19 +124,19 @@ namespace routing
      * @param from The sending host (previous hop).
      * @return The message that this host received.
      */
-    virtual Message *messageTransferred(const std::string &id, DTNHost *from);
+    virtual core::Message *messageTransferred(const std::string &id, core::DTNHost *from);
 
-    virtual bool createNewMessage(std::shared_ptr<Message> m);
+    virtual bool createNewMessage(std::shared_ptr<core::Message> m);
     virtual void deleteMessage(const std::string &id, bool drop);
-    virtual void messageAborted(const std::string &id, DTNHost *from, int bytesRemaining);
-    virtual void sendMessage(const std::string &id, DTNHost *to);
-    virtual bool requestDeliverableMessages(Connection *con);
+    virtual void messageAborted(const std::string &id, core::DTNHost *from, int bytesRemaining);
+    virtual void sendMessage(const std::string &id, core::DTNHost *to);
+    virtual bool requestDeliverableMessages(core::Connection *con);
 
     int getBufferSize() const;
     int getFreeBufferSize() const;
     int getNrofMessages() const;
-    std::vector<std::shared_ptr<Message>> getMessageCollection() const;
-    DTNHost *getHost() const;
+    std::vector<std::shared_ptr<core::Message>> getMessageCollection() const;
+    core::DTNHost *getHost() const;
     RoutingInfo getRoutingInfo() const;
     std::string toString() const;
 
@@ -140,20 +144,20 @@ namespace routing
     std::vector<std::shared_ptr<Application>> getApplications(const std::string &ID) const;
 
   protected:
-    std::vector<std::shared_ptr<MessageListener>> mListeners;
-    std::unordered_map<std::string, std::shared_ptr<Message>> deliveredMessages;
+    std::vector<std::shared_ptr<core::MessageListener>> mListeners;
+    std::unordered_map<std::string, std::shared_ptr<core::Message>> deliveredMessages;
     int msgTtl;
 
-    Message *getMessage(const std::string &id);
+    core::Message *getMessage(const std::string &id);
     bool hasMessage(const std::string &id) const;
-    bool isDeliveredMessage(const Message &m) const;
+    bool isDeliveredMessage(const core::Message &m) const;
 
-    void putToIncomingBuffer(std::shared_ptr<Message> m, DTNHost *from);
-    std::shared_ptr<Message> removeFromIncomingBuffer(const std::string &id, DTNHost *from);
+    void putToIncomingBuffer(std::shared_ptr<core::Message> m, core::DTNHost *from);
+    std::shared_ptr<core::Message> removeFromIncomingBuffer(const std::string &id, core::DTNHost *from);
     bool isIncomingMessage(const std::string &id) const;
 
-    void addToMessages(std::shared_ptr<Message> m, bool newMessage);
-    std::shared_ptr<Message> removeFromMessages(const std::string &id);
+    void addToMessages(std::shared_ptr<core::Message> m, bool newMessage);
+    std::shared_ptr<core::Message> removeFromMessages(const std::string &id);
 
     /**
      * @brief Sorts or shuffles the given list according to the current sending queue mode.
