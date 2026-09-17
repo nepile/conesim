@@ -123,4 +123,5 @@ namespace core {
     std::string DTNHost::toString() const { return "StubDTNHost"; }
     void DTNHost::messageAborted(const std::string&, DTNHost*, int) {}
     void DTNHost::messageTransferred(const std::string&, DTNHost*) {}
+    void DTNHost::createNewMessage(std::shared_ptr<Message>) {}
 }
