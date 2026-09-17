@@ -7,7 +7,7 @@
  * Released under GPLv3. See LICENSE.txt for details. 
  */
 
-#include "Message.hpp"
+#include "core/Message.hpp"
 #include "core/DTNHost.hpp"
 #include "core/SimulationError.hpp"
 #include "core/SimulationClock.hpp"
