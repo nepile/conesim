@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "core/DTN2Manager.hpp"
 #include "core/Configuration.hpp"
+#include "core/Coord.hpp"
+#include "core/Connection.hpp"
 
 // Define dummy classes to satisfy forward declarations in DTN2Manager
 namespace ecla {
@@ -112,4 +114,13 @@ namespace core {
     int DTNHost::getAddress() const { return 0; }
     void DTNHost::update(bool) {}
     void DTNHost::move(double) {}
+    
+    // Additional stubs for Connection and NetworkInterface
+    ModuleCommunicationBus* DTNHost::getComBus() const { return nullptr; }
+    void DTNHost::connectionUp(Connection*) {}
+    void DTNHost::connectionDown(Connection*) {}
+    Coord DTNHost::getLocation() const { return Coord(0,0); }
+    std::string DTNHost::toString() const { return "StubDTNHost"; }
+    void DTNHost::messageAborted(const std::string&, DTNHost*, int) {}
+    void DTNHost::messageTransferred(const std::string&, DTNHost*) {}
 }
