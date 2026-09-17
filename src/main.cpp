@@ -1,6 +1,6 @@
-#include <iostream>
+#include "core/DTNSim.hpp"
 
-int main() {
-    std::cout << "ONE SIM C++" << '\n';
+int main(int argc, char* argv[]) {
+    core::DTNSim::main(argc, argv);
     return 0;
 }
