@@ -39,6 +39,12 @@ add_library(conesim_movement ${MOVEMENT_SOURCES})
 target_include_directories(conesim_movement PUBLIC include)
 
 # ==========================================
+# TARGET: conesim_interfaces
+# ==========================================
+file(GLOB INTERFACES_SOURCES src/interfaces/*.cpp)
+add_library(conesim_interfaces ${INTERFACES_SOURCES})
+target_include_directories(conesim_interfaces PUBLIC include)
+
 # TARGET: conesim_input
 # ==========================================
 file(GLOB INPUT_SOURCES src/input/*.cpp)
@@ -55,6 +61,7 @@ target_include_directories(conesim_report PUBLIC include)
 # Connecting modules to the core, as they require the system core.
 target_link_libraries(conesim_routing PUBLIC conesim_core)
 target_link_libraries(conesim_movement PUBLIC conesim_core)
+target_link_libraries(conesim_interfaces PUBLIC conesim_core)
 target_link_libraries(conesim_input PUBLIC conesim_core)
 target_link_libraries(conesim_report PUBLIC conesim_core)
 
@@ -91,6 +98,7 @@ file(GLOB TEST_SOURCES
     tests/core/*.cpp 
     tests/routing/community/*.cpp 
     tests/movement/*.cpp
+    tests/interfaces/*.cpp
     tests/input/*.cpp
     tests/report/*.cpp
 )
@@ -103,6 +111,7 @@ target_link_libraries(run_tests
     PRIVATE
     conesim_routing
     conesim_movement
+    conesim_interfaces
     conesim_input
     conesim_report
     GTest::gtest_main
