@@ -51,11 +51,19 @@ file(GLOB INPUT_SOURCES src/input/*.cpp)
 add_library(conesim_input ${INPUT_SOURCES})
 target_include_directories(conesim_input PUBLIC include)
 
+# ==========================================
+# TARGET: conesim_report
+# ==========================================
+file(GLOB REPORT_SOURCES src/report/*.cpp)
+add_library(conesim_report ${REPORT_SOURCES})
+target_include_directories(conesim_report PUBLIC include)
+
 # Connecting modules to the core, as they require the system core.
 target_link_libraries(conesim_routing PUBLIC conesim_core)
 target_link_libraries(conesim_movement PUBLIC conesim_core)
 target_link_libraries(conesim_interfaces PUBLIC conesim_core)
 target_link_libraries(conesim_input PUBLIC conesim_core)
+target_link_libraries(conesim_report PUBLIC conesim_core)
 
 # ==========================================
 # DEPENDENCY: GoogleTest
@@ -77,6 +85,7 @@ target_link_libraries(conesim
     conesim_routing
     conesim_movement
     conesim_input
+    conesim_report
 )
 
 # ==========================================
@@ -91,6 +100,7 @@ file(GLOB TEST_SOURCES
     tests/movement/*.cpp
     tests/interfaces/*.cpp
     tests/input/*.cpp
+    tests/report/*.cpp
 )
 
 add_executable(run_tests ${TEST_SOURCES})
@@ -103,6 +113,7 @@ target_link_libraries(run_tests
     conesim_movement
     conesim_interfaces
     conesim_input
+    conesim_report
     GTest::gtest_main
 )
 
