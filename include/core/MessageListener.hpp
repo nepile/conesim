@@ -1,9 +1,9 @@
 #pragma once
 
+namespace core {
+
 class Message;
 class DTNHost;
-
-namespace core {
 
 /**
  * @file MessageListener.hpp
