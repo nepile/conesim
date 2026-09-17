@@ -62,6 +62,17 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # ==========================================
+# TARGET: conesim
+# ==========================================
+add_executable(conesim src/main.cpp)
+target_link_libraries(conesim
+    PRIVATE
+    conesim_routing
+    conesim_movement
+    conesim_input
+)
+
+# ==========================================
 # TARGET: run_tests (Unit Testing)
 # ==========================================
 enable_testing()
