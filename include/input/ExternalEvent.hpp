@@ -1,8 +1,10 @@
 /**
  * @file ExternalEvent.hpp
  * @brief Super class for all external events.
- * @author Opeteer
+ * @author Opeteer & Ferry
  * @date September, 2026
+ * 
+ * Ported from Aalto University, ComNet (Java) to C++
  */
 
 #pragma once

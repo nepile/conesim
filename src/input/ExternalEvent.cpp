@@ -1,7 +1,7 @@
 /**
  * @file ExternalEvent.cpp
  * @brief Implementation of ExternalEvent
- * @author Opeteer
+ * @author Opeteer & Ferry
  * @date September, 2026
  */
 
