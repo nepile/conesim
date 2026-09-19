@@ -1,8 +1,8 @@
 /**
  * @file ExternalEvent.hpp
  * @brief Super class for all external events.
- * @date September 2026
- * @author Ferry
+ * @author Opeteer & Ferry
+ * @date September, 2026
  * 
  * Ported from Aalto University, ComNet (Java) to C++
  */
@@ -10,49 +10,53 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
-// Forward declaration untuk kelas World agar tidak terjadi circular dependency
-class World;
+namespace core {
+    class World;
+}
 
 namespace input {
 
-    class ExternalEvent {
-    protected:
-        double time; // Waktu terjadinya event (detik simulasi)
+class ExternalEvent {
+protected:
+    /** @brief Time of the event (simulated seconds) */
+    double time;
 
-    public:
-        explicit ExternalEvent(double time);
-        virtual ~ExternalEvent() = default;
+public:
+    /**
+     * @brief Creates a new external event.
+     * @param time Time of the event
+     */
+    ExternalEvent(double time);
+    
+    virtual ~ExternalEvent() = default;
 
-        /**
-         * Processes the external event.
-         * @param world World where the actors of the event are
-         */
-        virtual void processEvent(World& world);
+    /**
+     * @brief Processes the external event.
+     * @param world World where the actors of the event are
+     */
+    virtual void processEvent(core::World& world);
 
-        /**
-         * Returns the time when this event should happen.
-         * @return Event's time
-         */
-        double getTime() const;
+    /**
+     * @brief Returns the time when this event should happen.
+     * @return Event's time
+     */
+    double getTime() const;
 
-        /**
-         * Compares two external events by their time (mirip Comparable di Java).
-         * @param other The other external event
-         * @return -1, 0, 1 if this event happens before, at the same time, or after
-         */
-        int compareTo(const ExternalEvent& other) const;
+    /**
+     * @brief Compares two external events by their time.
+     * @param other The other external event
+     */
+    bool operator<(const ExternalEvent& other) const;
+    bool operator==(const ExternalEvent& other) const;
+    bool operator>(const ExternalEvent& other) const;
 
-        /**
-         * Operator kurang dari (<) agar mudah dipakai di C++ Standard Library (seperti std::priority_queue)
-         */
-        bool operator<(const ExternalEvent& other) const;
-
-        /**
-         * Returns a String representation of the event
-         * @return string representation
-         */
-        virtual std::string toString() const;
-    };
+    /**
+     * @brief Returns a String representation of the event
+     * @return a String representation of the event
+     */
+    virtual std::string toString() const;
+};
 
 } // namespace input

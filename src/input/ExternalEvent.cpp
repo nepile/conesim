@@ -1,45 +1,41 @@
 /**
  * @file ExternalEvent.cpp
- * @brief Implementation for external events.
- * @date September 2026
- * @author Ferry
- * 
- * Ported from Aalto University, ComNet (Java) to C++
+ * @brief Implementation of ExternalEvent
+ * @author Opeteer & Ferry
+ * @date September, 2026
  */
 
-#include "ExternalEvent.hpp"
+#include "input/ExternalEvent.hpp"
 #include <sstream>
 
 namespace input {
 
-    ExternalEvent::ExternalEvent(double time) : time(time) {}
+ExternalEvent::ExternalEvent(double time) : time(time) {}
 
-    void ExternalEvent::processEvent(World& /* world */) {
-        // This is just a dummy event
-    }
+void ExternalEvent::processEvent(core::World& world) {
+    // this is just a dummy event by default
+}
 
-    double ExternalEvent::getTime() const {
-        return this->time;
-    }
+double ExternalEvent::getTime() const {
+    return time;
+}
 
-    int ExternalEvent::compareTo(const ExternalEvent& other) const {
-        if (this->time == other.time) {
-            return 0;
-        } else if (this->time < other.time) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
+bool ExternalEvent::operator<(const ExternalEvent& other) const {
+    return this->time < other.time;
+}
 
-    bool ExternalEvent::operator<(const ExternalEvent& other) const {
-        return this->time < other.time;
-    }
+bool ExternalEvent::operator==(const ExternalEvent& other) const {
+    return this->time == other.time;
+}
 
-    std::string ExternalEvent::toString() const {
-        std::ostringstream oss;
-        oss << "ExtEvent @ " << this->time;
-        return oss.str();
-    }
+bool ExternalEvent::operator>(const ExternalEvent& other) const {
+    return this->time > other.time;
+}
+
+std::string ExternalEvent::toString() const {
+    std::ostringstream ss;
+    ss << "ExtEvent @ " << time;
+    return ss.str();
+}
 
 } // namespace input

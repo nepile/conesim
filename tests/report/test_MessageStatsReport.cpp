@@ -12,36 +12,7 @@
 using namespace report;
 using namespace core;
 
-// ============================================================================
-// STUBS FOR LINKING
-// ============================================================================
-// Since Message.cpp and DTNHost.cpp are not implemented yet in the core,
-// we provide their basic implementations here to satisfy the linker and 
-// allow the report logic to be tested.
-
-namespace core {
-    // Message methods needed by MessageStatsReport
-    Message::Message(DTNHost* f, DTNHost* t, const std::string& i, int s) 
-        : from(f), to(t), id(i), size(s), uniqueId(0), timeReceived(0.0), timeCreated(SimulationClock::getTime()),
-          initTtl(INFINITE_TTL), responseSize(0), requestMsg(nullptr), appID("") {
-        path.push_back(f);
-    }
-    
-    std::string Message::getId() const { return id; }
-    double Message::getReceiveTime() const { return timeReceived; }
-    std::vector<DTNHost*> Message::getHops() const { return path; }
-    bool Message::isResponse() const { return requestMsg != nullptr; }
-    std::shared_ptr<Message> Message::getRequest() const { return requestMsg; }
-    double Message::getCreationTime() const { return timeCreated; }
-    int Message::getResponseSize() const { return responseSize; }
-    
-    // Setters we need for mocking
-    void Message::setReceiveTime(double time) { timeReceived = time; }
-    void Message::setResponseSize(int size) { responseSize = size; }
-    void Message::setRequest(std::shared_ptr<Message> request) { requestMsg = request; }
-    void Message::addNodeOnPath(DTNHost* node) { path.push_back(node); }
-
-}
+// Removed Message stubs since Message.cpp is now present in core
 
 
 // ============================================================================
