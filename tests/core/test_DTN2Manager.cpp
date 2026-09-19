@@ -109,7 +109,7 @@ TEST_F(DTN2ManagerTest, SetupEarlyReturnOnMissingReporterOrEventsTest) {
 // the linker requires these symbols to exist. Since the actual DTNHost
 // is not fully implemented in this branch, we provide stubs for testing.
 namespace core {
-    int DTNHost::getAddress() const { return 0; }
-    void DTNHost::update(bool) {}
-    void DTNHost::move(double) {}
+    // int DTNHost::getAddress() const { return 0; }
+    // void DTNHost::update(bool) {}
+    // void DTNHost::move(double) {}
 }
