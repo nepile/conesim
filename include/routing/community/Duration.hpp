@@ -48,6 +48,11 @@ public:
      * @return A standard string in the format "Start: [start], End: [end]".
      */
     std::string getDuration() const;
+
+    bool operator<(const Duration& other) const {
+        if (start != other.start) return start < other.start;
+        return end < other.end;
+    }
 };
 
 } // namespace routing::community
