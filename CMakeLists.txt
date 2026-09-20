@@ -95,7 +95,7 @@ target_link_libraries(conesim
 enable_testing()
 
 # Collect all test files from the core, routing and movement folders
-file(GLOB TEST_SOURCES 
+file(GLOB TEST_SOURCES
     tests/core/*.cpp 
     tests/routing/community/*.cpp 
     tests/movement/*.cpp
@@ -110,6 +110,7 @@ target_include_directories(run_tests PRIVATE include)
 # Link routing and movement
 target_link_libraries(run_tests
     PRIVATE
+    conesim_core
     conesim_routing
     conesim_movement
     conesim_interfaces
