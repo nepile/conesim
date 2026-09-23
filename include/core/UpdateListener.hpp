@@ -25,7 +25,7 @@ public:
     /**
      * @brief Virtual destructor to allow safe polymorphic destruction.
      */
-    virtual ~UpdateListener();
+    virtual ~UpdateListener() = default;
 
     /**
      * @brief Callback invoked after every simulation update cycle.
