@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "core/DTN2Manager.hpp"
 #include "core/Configuration.hpp"
+#include "core/Coord.hpp"
+#include "core/Connection.hpp"
 
 // Define dummy classes to satisfy forward declarations in DTN2Manager
 namespace ecla {
