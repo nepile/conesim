@@ -16,10 +16,19 @@
 #include <memory>
 #include <utility>
 
-class DTNHost;
-class Message;
-class Connection;
-class Settings;
+namespace core {
+    class DTNHost;
+    class Message;
+    class Connection;
+    class Configuration;
+    class MessageListener;
+}
+
+using DTNHost = core::DTNHost;
+using Message = core::Message;
+using Connection = core::Connection;
+using Settings = core::Configuration;
+using MessageListener = core::MessageListener;
 
 namespace routing
 {
