@@ -60,7 +60,6 @@ target_include_directories(conesim_report PUBLIC include)
 
 # Connecting modules to the core, as they require the system core.
 target_link_libraries(conesim_routing PUBLIC conesim_core)
-target_link_libraries(conesim_core PUBLIC conesim_routing)
 target_link_libraries(conesim_movement PUBLIC conesim_core)
 target_link_libraries(conesim_interfaces PUBLIC conesim_core)
 target_link_libraries(conesim_input PUBLIC conesim_core)
@@ -110,7 +109,6 @@ target_include_directories(run_tests PRIVATE include)
 # Link routing and movement
 target_link_libraries(run_tests
     PRIVATE
-    conesim_core
     conesim_routing
     conesim_movement
     conesim_interfaces
