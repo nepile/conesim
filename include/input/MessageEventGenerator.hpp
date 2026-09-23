@@ -12,10 +12,10 @@
 #include <string>
 #include <vector>
 #include <random>
-#include "Configuration.hpp"
-#include "ConfigurationError.hpp"
-#include "EventQueue.hpp"
-#include "ExternalEvent.hpp"
+#include "core/Configuration.hpp"
+#include "core/ConfigurationError.hpp"
+#include "input/EventQueue.hpp"
+#include "input/ExternalEvent.hpp"
 
 namespace input {
 

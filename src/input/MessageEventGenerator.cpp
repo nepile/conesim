@@ -7,8 +7,8 @@
  * Ported from Aalto University, ComNet (Java) to C++
  */
 
-#include "MessageEventGenerator.hpp"
-//#include "MessageCreateEvent.hpp"
+#include "input/MessageEventGenerator.hpp"
+#include "input/MessageCreateEvent.hpp"
 #include <stdexcept>
 #include <functional>
 #include <limits>
@@ -26,7 +26,7 @@ namespace input {
         this->sizeRange = s.getCsvInts(MESSAGE_SIZE_S);
         this->msgInterval = s.getCsvInts(MESSAGE_INTERVAL_S);
         this->hostRange = s.getCsvInts(HOST_RANGE_S, 2);
-        this->idPrefix = s.getCsvSetting(MESSAGE_ID_PREFIX_S);
+        this->idPrefix = s.getConfiguration(MESSAGE_ID_PREFIX_S);
         this->id = 0;
 
         if (s.contains(MESSAGE_TIME_S)) {
@@ -95,7 +95,7 @@ namespace input {
         return msgInterval[0] + timeDiff;
     }
 
-    int MessageEventGenerator::drawToAddress(const std::vector<int>& range, int from) {
+    int MessageEventGenerator::drawToHostAddress(const std::vector<int>& range, int from) {
         int to;
         do {
             to = this->hasToHostRange ? drawHostAddress(this->toHostRange) : drawHostAddress(this->hostRange);
@@ -112,7 +112,7 @@ namespace input {
         int to;
         
         from = drawHostAddress(this->hostRange); 
-        to = drawToAddress(this->hostRange, from);
+        to = drawToHostAddress(this->hostRange, from);
         
         msgSize = drawMessageSize();
         interval = drawNextEventTimeDiff();
