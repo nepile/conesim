@@ -10,7 +10,7 @@
 #pragma once
 
 #include <memory>
-#include <limits> // for using MAX_VALUE
+#include <limits>
 
 namespace input {
 
@@ -18,7 +18,7 @@ namespace input {
 
     class EventQueue {
     public:
-        virtual ~EventQueue();
+        virtual ~EventQueue() = default;
 
         /**
          * Returns the next event in the queue or ExternalEvent with time of
