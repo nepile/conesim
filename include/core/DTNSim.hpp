@@ -17,6 +17,7 @@ namespace core {
 class DTNSim {
 public:
     static const std::string BATCH_MODE_FLAG;
+    static const std::string BATCH_MODE_FLAG_LONG;
     static const std::string RANGE_DELIMETER;
     static const std::string SETTING_DEF_FLAG;
     static const std::string CMD_SETTING_DELIMITER;
@@ -40,6 +41,11 @@ public:
     static void registerForReset(ResetFunction resetFunc);
 
     /**
+     * @brief Clears registered reset functions.
+     */
+    static void reset();
+
+    /**
      * @brief Prints text to stdout
      * @param txt Text to print
      */
@@ -47,6 +53,13 @@ public:
 
 private:
     static std::vector<ResetFunction> resetList;
+
+    /**
+     * @brief Checks whether the argument is a numeric value or range (e.g. "5" or "1:5").
+     * @param arg The argument string to check
+     * @return true if numeric or range, false otherwise
+     */
+    static bool isNumericOrRange(const std::string& arg);
 
     /**
      * @brief Initializes Settings (Configuration in C++).
