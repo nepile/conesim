@@ -26,10 +26,12 @@ protected:
         out.close();
 
         resetCallCount = 0;
+        DTNSim::reset();
     }
 
     void TearDown() override {
         std::remove(testConfigFile.c_str());
+        DTNSim::reset();
     }
 };
 
@@ -67,4 +69,84 @@ TEST_F(DTNSimTest, GuiModeTest) {
     
     // In GUI mode, reset is not called automatically by main before the run
     EXPECT_EQ(resetCallCount, 0);
+}
+
+TEST_F(DTNSimTest, BatchModeLongFlagTest) {
+    DTNSim::registerForReset(&dummyResetFunction);
+
+    const char* argv[] = {
+        "conesim",
+        "--batch",
+        "2",
+        testConfigFile.c_str()
+    };
+    int argc = 4;
+
+    DTNSim::main(argc, const_cast<char**>(argv));
+
+    EXPECT_EQ(resetCallCount, 2);
+}
+
+TEST_F(DTNSimTest, BatchModeDirectConfigTest) {
+    DTNSim::registerForReset(&dummyResetFunction);
+
+    // -b followed immediately by config file (defaults to 1 run)
+    const char* argv[] = {
+        "conesim",
+        "-b",
+        testConfigFile.c_str()
+    };
+    int argc = 3;
+
+    DTNSim::main(argc, const_cast<char**>(argv));
+
+    EXPECT_EQ(resetCallCount, 1);
+}
+
+TEST_F(DTNSimTest, BatchModeLongFlagDirectConfigTest) {
+    DTNSim::registerForReset(&dummyResetFunction);
+
+    // --batch followed immediately by config file (defaults to 1 run)
+    const char* argv[] = {
+        "conesim",
+        "--batch",
+        testConfigFile.c_str()
+    };
+    int argc = 3;
+
+    DTNSim::main(argc, const_cast<char**>(argv));
+
+    EXPECT_EQ(resetCallCount, 1);
+}
+
+TEST_F(DTNSimTest, ConfigWithoutRunIndexTest) {
+    // Non-batch mode with config file directly (no numeric run index)
+    const char* argv[] = {
+        "conesim",
+        testConfigFile.c_str()
+    };
+    int argc = 2;
+
+    // Should not crash trying to parse config filename as an integer
+    DTNSim::main(argc, const_cast<char**>(argv));
+
+    Configuration conf;
+    EXPECT_EQ(conf.getConfiguration("Scenario.name"), "TestDTNSim");
+}
+
+TEST_F(DTNSimTest, BatchModeFallbackToDefaultSettingsTest) {
+    DTNSim::registerForReset(&dummyResetFunction);
+
+    // Only -b flag passed, should fallback to default_settings.cfg
+    const char* argv[] = {
+        "conesim",
+        "-b"
+    };
+    int argc = 2;
+
+    DTNSim::main(argc, const_cast<char**>(argv));
+
+    EXPECT_EQ(resetCallCount, 1);
+    Configuration conf;
+    EXPECT_TRUE(conf.contains("Scenario.name"));
 }
