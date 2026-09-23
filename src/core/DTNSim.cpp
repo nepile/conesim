@@ -15,15 +15,35 @@
 #include <stdexcept>
 #include <sstream>
 #include <algorithm>
+#include <filesystem>
 
 namespace core {
 
 const std::string DTNSim::BATCH_MODE_FLAG = "-b";
+const std::string DTNSim::BATCH_MODE_FLAG_LONG = "--batch";
 const std::string DTNSim::RANGE_DELIMETER = ":";
 const std::string DTNSim::SETTING_DEF_FLAG = "-d";
 const std::string DTNSim::CMD_SETTING_DELIMITER = "@@";
 
 std::vector<DTNSim::ResetFunction> DTNSim::resetList;
+
+bool DTNSim::isNumericOrRange(const std::string& arg) {
+    if (arg.empty()) {
+        return false;
+    }
+    auto isDigits = [](const std::string& s) {
+        return !s.empty() && std::all_of(s.begin(), s.end(), [](unsigned char c) {
+            return std::isdigit(c);
+        });
+    };
+    size_t delimPos = arg.find(RANGE_DELIMETER);
+    if (delimPos != std::string::npos) {
+        std::string first = arg.substr(0, delimPos);
+        std::string second = arg.substr(delimPos + 1);
+        return isDigits(first) && isDigits(second);
+    }
+    return isDigits(arg);
+}
 
 void DTNSim::main(int argc, char* argv[]) {
     bool batchMode = false;
@@ -38,12 +58,14 @@ void DTNSim::main(int argc, char* argv[]) {
     if (!args.empty()) {
         bool haveRunIndex = false;
         while (firstConfIndex < static_cast<int>(args.size())) {
-            if (args[firstConfIndex] == BATCH_MODE_FLAG) {
+            if (args[firstConfIndex] == BATCH_MODE_FLAG || args[firstConfIndex] == BATCH_MODE_FLAG_LONG) {
                 batchMode = true;
-                if (firstConfIndex + 1 < static_cast<int>(args.size())) {
+                if (firstConfIndex + 1 < static_cast<int>(args.size()) && isNumericOrRange(args[firstConfIndex + 1])) {
                     nrofRuns = parseNrofRuns(args[firstConfIndex + 1]);
+                    firstConfIndex += 2;
+                } else {
+                    firstConfIndex += 1;
                 }
-                firstConfIndex += 2;
                 haveRunIndex = true;
             } else if (args[firstConfIndex] == SETTING_DEF_FLAG) {
                 if (firstConfIndex + 1 < static_cast<int>(args.size())) {
@@ -56,8 +78,7 @@ void DTNSim::main(int argc, char* argv[]) {
                     firstConfIndex++;
                     haveRunIndex = true;
                 } catch (const std::invalid_argument&) {
-                    std::cerr << "Error parsing command args. Expected run index. Got: " << args[firstConfIndex] << '\n';
-                    std::exit(-1);
+                    break;
                 }
             } else {
                 break;
@@ -100,13 +121,29 @@ void DTNSim::main(int argc, char* argv[]) {
 
 void DTNSim::initSettings(const std::vector<std::string>& args, int firstIndex) {
     if (firstIndex >= static_cast<int>(args.size())) {
+        if (std::filesystem::exists(Configuration::DEF_SETTINGS_FILE)) {
+            Configuration::init(Configuration::DEF_SETTINGS_FILE);
+        } else if (std::filesystem::exists("../" + Configuration::DEF_SETTINGS_FILE)) {
+            Configuration::init("../" + Configuration::DEF_SETTINGS_FILE);
+        } else {
+            Configuration::init("");
+        }
         return;
     }
 
+    std::string firstFile = args[firstIndex];
+    if (!std::filesystem::exists(firstFile) && std::filesystem::exists("../" + firstFile)) {
+        firstFile = "../" + firstFile;
+    }
+
     try {
-        Configuration::init(args[firstIndex]);
+        Configuration::init(firstFile);
         for (int i = firstIndex + 1; i < static_cast<int>(args.size()); i++) {
-            Configuration::addSettings(args[i]);
+            std::string addFile = args[i];
+            if (!std::filesystem::exists(addFile) && std::filesystem::exists("../" + addFile)) {
+                addFile = "../" + addFile;
+            }
+            Configuration::addSettings(addFile);
         }
     } catch (const ConfigurationError& er) {
         try {
@@ -123,6 +160,10 @@ void DTNSim::initSettings(const std::vector<std::string>& args, int firstIndex) 
 
 void DTNSim::registerForReset(ResetFunction resetFunc) {
     resetList.push_back(resetFunc);
+}
+
+void DTNSim::reset() {
+    resetList.clear();
 }
 
 void DTNSim::resetForNextRun() {
