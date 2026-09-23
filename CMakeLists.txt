@@ -96,6 +96,7 @@ enable_testing()
 # Collect all test files from the core, routing and movement folders
 file(GLOB TEST_SOURCES
     tests/core/*.cpp 
+    tests/routing/*.cpp 
     tests/routing/community/*.cpp 
     tests/movement/*.cpp
     tests/interfaces/*.cpp
