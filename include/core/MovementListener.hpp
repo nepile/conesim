@@ -22,7 +22,7 @@ public:
     /**
      * @brief Virtual destructor to allow safe polymorphic cleanup in derived classes.
      */
-    virtual ~MovementListener();
+    virtual ~MovementListener() = default;
 
     /**
      * @brief Callback invoked when a host picks or starts moving toward a new waypoint.

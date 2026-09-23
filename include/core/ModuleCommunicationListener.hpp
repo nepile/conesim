@@ -22,7 +22,7 @@ public:
     /**
      * @brief Virtual destructor to ensure proper cleanup of derived classes.
      */
-    virtual ~ModuleCommunicationListener();
+    virtual ~ModuleCommunicationListener() = default;
 
     /**
      * @brief Callback triggered when a monitored module value changes.
