@@ -23,7 +23,7 @@ public:
     /**
      * @brief Virtual destructor to ensure safe polymorphic cleanup.
      */
-    virtual ~MessageListener();
+    virtual ~MessageListener() = default;
 
     /**
      * @brief Callback invoked when a new message is generated in the simulation.

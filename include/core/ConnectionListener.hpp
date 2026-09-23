@@ -22,7 +22,7 @@ public:
     /**
      * @brief Virtual destructor to ensure proper cleanup in derived classes.
      */
-    virtual ~ConnectionListener();
+    virtual ~ConnectionListener() = default;
 
     /**
      * @brief Callback invoked when a new connection is established between two hosts.
