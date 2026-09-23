@@ -14,7 +14,7 @@
 #include <map>
 #include <memory>
 #include <any>
-#include "SimulationError.hpp"
+#include "core/SimulationError.hpp"
 
 namespace core {
 

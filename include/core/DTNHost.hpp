@@ -8,8 +8,7 @@
  * Released under GPLv3. See LICENSE.txt for details. 
  */
 
-#ifndef DTNHOST_HPP
-#define DTNHOST_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -21,17 +20,23 @@
 #include "core/Coord.hpp"
 #include "routing/community/Duration.hpp" 
 
-namespace core {
-    class MessageRouter;
+namespace movement {
     class MovementModel;
     class Path;
+}
+
+namespace routing {
+    class MessageRouter;
+    class RoutingInfo;
+}
+
+namespace core {
     class MessageListener;
     class MovementListener;
     class NetworkInterface;
     class ModuleCommunicationBus;
     class Connection;
     class Message;
-    class RoutingInfo;
 
     /**
      * @class DTNHost
@@ -48,24 +53,24 @@ namespace core {
         Coord location;     /**< Where is the host */
         Coord destination;  /**< Where is it going */
 
-        // Ownership: Host have the router, movement, and its path 
-        std::shared_ptr<MessageRouter> router;
-        std::shared_ptr<MovementModel> movement;
-        std::shared_ptr<Path> path;
+        // Ownership: Host has the router, movement, and its path 
+        std::shared_ptr<routing::MessageRouter> router;
+        std::shared_ptr<movement::MovementModel> movement;
+        std::shared_ptr<movement::Path> path;
         
         double speed;
         double nextTimeToMove;
         std::string name;
         std::vector<int> color;
 
-        // Observer pattern: Host don't have the listener, it is just save it (raw pointer)
+        // Observer pattern: Host doesn't own the listener, it just saves raw pointers
         std::vector<MessageListener*> msgListeners;
         std::vector<MovementListener*> movListeners;
         
-        // host has a interface
+        // Host has interfaces
         std::vector<std::shared_ptr<NetworkInterface>> net;
         
-        // Host just connected to bus, and it hasn't it
+        // Host connects to bus, but does not own it
         ModuleCommunicationBus* comBus;
 
         /**
@@ -78,7 +83,7 @@ namespace core {
          * @brief Set a router for this host
          * @param router The router to set
          */
-        void setRouter(std::shared_ptr<MessageRouter> router);
+        void setRouter(std::shared_ptr<routing::MessageRouter> router);
 
         /**
          * @brief Sets the next destination and speed to correspond the next waypoint on the path.
@@ -88,7 +93,7 @@ namespace core {
 
     public:
         // ====================================================================
-        // ADDITIONAL TESTING (Special variabel for Machine Learning / RL / Custom)
+        // ADDITIONAL TESTING (Special variables for Machine Learning / RL / Custom)
         // ====================================================================
         std::list<routing::community::Duration> intervals;
         std::vector<double> congestionRatio;
@@ -125,8 +130,8 @@ namespace core {
                 const std::string& groupId, 
                 const std::vector<std::shared_ptr<NetworkInterface>>& interf,
                 ModuleCommunicationBus* comBus,
-                std::shared_ptr<MovementModel> mmProto, 
-                std::shared_ptr<MessageRouter> mRouterProto);
+                std::shared_ptr<movement::MovementModel> mmProto, 
+                std::shared_ptr<routing::MessageRouter> mRouterProto);
 
         ~DTNHost() = default;
 
@@ -139,23 +144,23 @@ namespace core {
          */
         static void reset();
 
+
         /**
          * @brief Returns true if this node is active (false if not)
          * @return true if this node is active
          */
         bool isActive() const;
-
+        
         /**
          * @brief Returns the router of this host
          * @return the router of this host
          */
-        std::shared_ptr<MessageRouter> getRouter() const;
+        std::shared_ptr<routing::MessageRouter> getRouter() const;
 
         /**
          * @brief Returns the network-layer address of this host.
          */
         int getAddress() const;
-
         void setAddress(int address);
 
         /**
@@ -172,7 +177,7 @@ namespace core {
         std::vector<Connection*> getConnections() const;
 
         Coord getLocation() const;
-        std::shared_ptr<Path> getPath() const;
+        std::shared_ptr<movement::Path> getPath() const;
         
         void setLocation(const Coord& location);
         void setName(const std::string& name);
@@ -181,7 +186,7 @@ namespace core {
         std::vector<std::shared_ptr<Message>> getMessageCollection() const;
         int getNrofMessages() const;
         double getBufferOccupancy() const;
-        std::shared_ptr<RoutingInfo> getRoutingInfo() const;
+        std::shared_ptr<routing::RoutingInfo> getRoutingInfo() const;
 
         std::vector<std::shared_ptr<NetworkInterface>> getInterfaces() const;
 
@@ -193,7 +198,6 @@ namespace core {
         void forceConnection(DTNHost* anotherHost, const std::string& interfaceId, bool up);
 
         /**
-         * @brief for tests only --- do not use!!!
          * @deprecated Use forceConnection instead.
          */
         void connect(DTNHost* h);
@@ -232,7 +236,7 @@ namespace core {
         bool operator<(const DTNHost& other) const;
 
         // ====================================================================
-        // ADDITIONAL METHOD
+        // ADDITIONAL METHODS
         // ====================================================================
 
         /**
@@ -247,5 +251,3 @@ namespace core {
     };
 
 } // namespace core
-
-#endif // DTNHOST_HPP

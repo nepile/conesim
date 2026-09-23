@@ -111,17 +111,7 @@ TEST_F(DTN2ManagerTest, SetupEarlyReturnOnMissingReporterOrEventsTest) {
 // the linker requires these symbols to exist. Since the actual DTNHost
 // is not fully implemented in this branch, we provide stubs for testing.
 namespace core {
-    int DTNHost::getAddress() const { return 0; }
-    void DTNHost::update(bool) {}
-    void DTNHost::move(double) {}
-    
-    // Additional stubs for Connection and NetworkInterface
-    ModuleCommunicationBus* DTNHost::getComBus() const { return nullptr; }
-    void DTNHost::connectionUp(Connection*) {}
-    void DTNHost::connectionDown(Connection*) {}
-    Coord DTNHost::getLocation() const { return Coord(0,0); }
-    std::string DTNHost::toString() const { return "StubDTNHost"; }
-    void DTNHost::messageAborted(const std::string&, DTNHost*, int) {}
-    void DTNHost::messageTransferred(const std::string&, DTNHost*) {}
-    void DTNHost::createNewMessage(std::shared_ptr<Message>) {}
+    // int DTNHost::getAddress() const { return 0; }
+    // void DTNHost::update(bool) {}
+    // void DTNHost::move(double) {}
 }
