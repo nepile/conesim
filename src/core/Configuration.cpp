@@ -744,6 +744,10 @@ void Configuration::addSettings(const std::string& propFile) {
 void Configuration::loadFile(const std::string& filename) {
     std::ifstream file(filename);
 
+    if (!file.is_open() && std::filesystem::exists("../" + filename)) {
+        file.open("../" + filename);
+    }
+
     if (!file.is_open()) {
         throw ConfigurationError("Failed to open configuration file: " + filename);
     }
@@ -801,6 +805,8 @@ void Configuration::init(const std::string& propFile) {
 
     if (std::filesystem::exists(DEF_SETTINGS_FILE)) {
         loadFile(DEF_SETTINGS_FILE);
+    } else if (std::filesystem::exists("../" + DEF_SETTINGS_FILE)) {
+        loadFile("../" + DEF_SETTINGS_FILE);
     }
 
     if (!propFile.empty()) {
