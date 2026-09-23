@@ -13,8 +13,13 @@
 
 #include "routing/MessageRouter.hpp"
 
-class Connection;
-class Settings;
+namespace core {
+    class Connection;
+    class Configuration;
+}
+
+using Connection = core::Connection;
+using Settings = core::Configuration;
 
 namespace routing
 {
