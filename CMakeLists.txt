@@ -84,6 +84,7 @@ target_link_libraries(conesim
     PRIVATE
     conesim_routing
     conesim_movement
+    conesim_interfaces
     conesim_input
     conesim_report
 )
