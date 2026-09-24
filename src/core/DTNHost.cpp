@@ -117,6 +117,9 @@ bool DTNHost::isActive() const {
  */
 void DTNHost::setRouter(std::shared_ptr<routing::MessageRouter> router) {
     this->router = router;
+    if (this->router) {
+        this->router->init(this, {});
+    }
 }
 
 /**
