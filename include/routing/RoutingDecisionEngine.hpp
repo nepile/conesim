@@ -14,11 +14,15 @@
 
 #include <memory>
 
-namespace routing {
+namespace core{
 
 class DTNHost;
 class Connection;
 class Message;
+
+}
+
+namespace routing {
 
 /**
  * @class RoutingDecisionEngine
@@ -45,8 +49,8 @@ public:
      * @param peer The peer host connected to this host.
      */
     virtual void connectionUp(
-        DTNHost& thisHost,
-        DTNHost& peer
+        core::DTNHost& thisHost,
+        core::DTNHost& peer
     ) = 0;
 
     /**
@@ -56,8 +60,8 @@ public:
      * @param peer The peer host connected to this host.
      */
     virtual void connectionDown(
-        DTNHost& thisHost,
-        DTNHost& peer
+        core::DTNHost& thisHost,
+        core::DTNHost& peer
     ) = 0;
 
     /**
@@ -74,8 +78,8 @@ public:
      * @param peer The peer host connected to this host.
      */
     virtual void doExchangeForNewConnection(
-        Connection& con,
-        DTNHost& peer
+        core::Connection& con,
+        core::DTNHost& peer
     ) = 0;
 
     /**
@@ -91,7 +95,7 @@ public:
      * @return False if the message should be discarded.
      */
     virtual bool newMessage(
-        Message& m
+        core::Message& m
     ) = 0;
 
     /**
@@ -107,8 +111,8 @@ public:
      * False otherwise.
      */
     virtual bool isFinalDestination(
-        Message& m,
-        DTNHost& aHost
+        core::Message& m,
+        core::DTNHost& aHost
     ) = 0;
 
     /**
@@ -121,8 +125,8 @@ public:
      * False otherwise.
      */
     virtual bool shouldSaveReceivedMessage(
-        Message& m,
-        DTNHost& thisHost
+        core::Message& m,
+        core::DTNHost& thisHost
     ) = 0;
 
     /**
@@ -140,9 +144,9 @@ public:
      * @return False if the message should not be sent.
      */
     virtual bool shouldSendMessageToHost(
-        Message& m,
-        DTNHost& otherHost,
-        DTNHost& thisHost
+        core::Message& m,
+        core::DTNHost& otherHost,
+        core::DTNHost& thisHost
     ) = 0;
 
     /**
@@ -155,8 +159,8 @@ public:
      * @return False if the message should not be deleted.
      */
     virtual bool shouldDeleteSentMessage(
-        Message& m,
-        DTNHost& otherHost
+        core::Message& m,
+        core::DTNHost& otherHost
     ) = 0;
 
     /**
@@ -171,8 +175,8 @@ public:
      * @return False if the message should not be deleted.
      */
     virtual bool shouldDeleteOldMessage(
-        Message& m,
-        DTNHost& hostReportingOld
+        core::Message& m,
+        core::DTNHost& hostReportingOld
     ) = 0;
 
     /**
@@ -181,7 +185,7 @@ public:
      * @param thisHost The host associated with this decision engine.
      */
     virtual void update(
-        DTNHost& thisHost
+        core::DTNHost& thisHost
     ) = 0;
 
     /**
